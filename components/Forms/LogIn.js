@@ -1,4 +1,6 @@
-import { useReducer } from 'react';
+import { useReducer, useEffect } from 'react';
+import useHttp from '../../hooks/useHttp';
+import { useRouter } from 'next/router';
 import Link from 'next/link';
 
 import Button from '@mui/material/Button';
@@ -6,7 +8,8 @@ import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
-import { Link as MUILink } from '@mui/material';
+import { Backdrop, Link as MUILink } from '@mui/material';
+import { CircularProgress } from '@mui/material';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 
@@ -33,6 +36,9 @@ const formReducer = (state, action) => {
 };
 
 const LogIn = () => {
+	const router = useRouter();
+	const { isLoading, error, sendRequest, data } = useHttp();
+
 	const [form, dispatch] = useReducer(formReducer, {
 		controls: {
 			email: { value: '', isValid: false, isTouched: false },
@@ -41,9 +47,37 @@ const LogIn = () => {
 		isValid: false,
 	});
 
+	useEffect(() => {
+		if (!error && data) {
+			console.log(data);
+			router.push('/');
+		}
+	}, [error, data, router]);
+
 	const handleSubmit = event => {
 		event.preventDefault();
-		console.log('submit');
+		const user = {
+			email: form.controls.email.value,
+			password: form.controls.password.value,
+		};
+
+		sendRequest(async () => {
+			const response = await fetch('/api/auth/login', {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+				},
+				body: JSON.stringify(user),
+			});
+
+			const data = await response.json();
+
+			if (!response.ok) {
+				throw new Error(data.message);
+			}
+
+			return data;
+		});
 	};
 
 	const onChangeHandler = (event, controlName) => {
@@ -64,6 +98,9 @@ const LogIn = () => {
 	return (
 		<Container component="main" maxWidth="xs">
 			<CssBaseline />
+			<Backdrop open={isLoading}>
+				<CircularProgress style={{ color: '#cecece' }} />
+			</Backdrop>
 			<Box
 				sx={{
 					marginTop: 8,
@@ -116,6 +153,11 @@ const LogIn = () => {
 							</Typography>
 						</Grid>
 					</Grid>
+					{error && (
+						<Typography variant="body1" color="error" sx={{ mt: 2 }}>
+							{error}
+						</Typography>
+					)}
 					<Button
 						type="submit"
 						fullWidth

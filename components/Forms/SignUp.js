@@ -1,4 +1,6 @@
-import { useReducer } from 'react';
+import { useReducer, useEffect } from 'react';
+import useHttp from '../../hooks/useHttp';
+import { useRouter } from 'next/router';
 import Link from 'next/link';
 
 import Button from '@mui/material/Button';
@@ -6,7 +8,7 @@ import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
-import { Link as MUILink } from '@mui/material';
+import { Backdrop, CircularProgress, Link as MUILink } from '@mui/material';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 
@@ -33,19 +35,51 @@ const formReducer = (state, action) => {
 };
 
 const SignUp = () => {
+	const router = useRouter();
+	const { isLoading, error, sendRequest, data } = useHttp();
 	const [form, dispatch] = useReducer(formReducer, {
 		controls: {
 			email: { value: '', isValid: false, isTouched: false },
 			password: { value: '', isValid: false, isTouched: false },
 			firstName: { value: '', isValid: false, isTouched: false },
-			lastName: { value: '', isValid: false, isTouched: false },
+			lastName: { value: '', isValid: true, isTouched: false },
 		},
 		isValid: false,
 	});
 
+	useEffect(() => {
+		if (!error && data) {
+			console.log(data);
+			router.push('/');
+		}
+	}, [data, error, router]);
+
 	const handleSubmit = event => {
 		event.preventDefault();
-		console.log('submit');
+		const user = {
+			email: form.controls.email.value,
+			password: form.controls.password.value,
+			firstName: form.controls.firstName.value,
+			lastName: form.controls.lastName.value,
+		};
+
+		sendRequest(async () => {
+			const response = await fetch('/api/auth/register', {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+				},
+				body: JSON.stringify(user),
+			});
+
+			const data = await response.json();
+
+			if (!response.ok) {
+				throw new Error(data.message);
+			}
+
+			return data;
+		});
 	};
 
 	const onChangeHandler = (event, controlName) => {
@@ -61,9 +95,6 @@ const SignUp = () => {
 			case 'firstName':
 				isValid = value.trim().length > 0;
 				break;
-			case 'lastName':
-				isValid = value.trim().length > 0;
-				break;
 		}
 
 		dispatch({ type: 'FORM_CHANGE', control: controlName, value, isValid });
@@ -72,6 +103,9 @@ const SignUp = () => {
 	return (
 		<Container component="main" maxWidth="xs">
 			<CssBaseline />
+			<Backdrop open={isLoading} styles={{ zIndex: 100 }}>
+				<CircularProgress style={{ color: '#cecece' }} />
+			</Backdrop>
 			<Box
 				sx={{
 					marginTop: 8,
@@ -105,22 +139,7 @@ const SignUp = () => {
 							</Typography>
 						</Grid>
 						<Grid item xs={12} sm={6}>
-							<TextField
-								required
-								fullWidth
-								id="lastName"
-								label="Last Name"
-								onChange={event => onChangeHandler(event, 'lastName')}
-								error={
-									!form.controls.lastName.isValid &&
-									form.controls.lastName.isTouched
-								}
-							/>
-							<Typography variant="caption" color="error">
-								{!form.controls.lastName.isValid &&
-									form.controls.lastName.isTouched &&
-									'Last name is required'}
-							</Typography>
+							<TextField fullWidth id="lastName" label="Last Name" />
 						</Grid>
 						<Grid item xs={12}>
 							<TextField
@@ -160,6 +179,11 @@ const SignUp = () => {
 							</Typography>
 						</Grid>
 					</Grid>
+					{error && (
+						<Typography variant="body1" color="error" sx={{ mt: 2 }}>
+							{error}
+						</Typography>
+					)}
 					<Button
 						type="submit"
 						fullWidth
