@@ -1,51 +1,29 @@
-import { useReducer, useEffect } from 'react';
+import { useEffect } from 'react';
+import useForm from '../../hooks/useForm';
 import useHttp from '../../hooks/useHttp';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
 
 import Button from '@mui/material/Button';
-import CssBaseline from '@mui/material/CssBaseline';
-import TextField from '@mui/material/TextField';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 import { Backdrop, Link as MUILink } from '@mui/material';
 import { CircularProgress } from '@mui/material';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
-
-const formReducer = (state, action) => {
-	switch (action.type) {
-		case 'FORM_CHANGE':
-			const newState = {
-				controls: {
-					...state.controls,
-					[action.control]: {
-						value: action.value,
-						isValid: action.isValid,
-						isTouched: true,
-					},
-				},
-			};
-			newState.isValid = Object.values(newState.controls).every(
-				control => control.isValid,
-			);
-			return newState;
-		default:
-			return state;
-	}
-};
+import Input from '../Utils/Input';
 
 const LogIn = () => {
-	const router = useRouter();
-	const { isLoading, error, sendRequest, data } = useHttp();
-
-	const [form, dispatch] = useReducer(formReducer, {
+	const { formState, onChange } = useForm({
 		controls: {
-			email: { value: '', isValid: false, isTouched: false },
-			password: { value: '', isValid: false, isTouched: false },
+			email: { value: '', isValid: false },
+			password: { value: '', isValid: false },
 		},
 		isValid: false,
 	});
+
+	const router = useRouter();
+	const { isLoading, error, sendRequest, data } = useHttp();
 
 	useEffect(() => {
 		if (!error && data) {
@@ -57,8 +35,8 @@ const LogIn = () => {
 	const handleSubmit = event => {
 		event.preventDefault();
 		const user = {
-			email: form.controls.email.value,
-			password: form.controls.password.value,
+			email: formState.controls.email.value,
+			password: formState.controls.password.value,
 		};
 
 		sendRequest(async () => {
@@ -80,24 +58,8 @@ const LogIn = () => {
 		});
 	};
 
-	const onChangeHandler = (event, controlName) => {
-		const value = event.target.value;
-		let isValid = false;
-		switch (controlName) {
-			case 'email':
-				isValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
-				break;
-			case 'password':
-				isValid = value.trim().length >= 6;
-				break;
-		}
-
-		dispatch({ type: 'FORM_CHANGE', control: controlName, value, isValid });
-	};
-
 	return (
 		<Container component="main" maxWidth="xs">
-			<CssBaseline />
 			<Backdrop open={isLoading}>
 				<CircularProgress style={{ color: '#cecece' }} />
 			</Backdrop>
@@ -115,42 +77,29 @@ const LogIn = () => {
 				<Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3 }}>
 					<Grid container spacing={2}>
 						<Grid item xs={12}>
-							<TextField
+							<Input
 								autoFocus
 								required
 								fullWidth
 								type="email"
 								id="email"
 								label="Email Address"
-								onChange={event => onChangeHandler(event, 'email')}
-								error={
-									!form.controls.email.isValid && form.controls.email.isTouched
-								}
+								onChange={onChange}
+								errorText="Please enter a valid email address."
+								validator={value => value.includes('@')}
 							/>
-							<Typography variant="caption" color="error">
-								{!form.controls.email.isValid &&
-									form.controls.email.isTouched &&
-									'Please Enter a valid email'}
-							</Typography>
 						</Grid>
 						<Grid item xs={12}>
-							<TextField
+							<Input
 								required
 								fullWidth
 								label="Password"
 								type="password"
 								id="password"
-								onChange={event => onChangeHandler(event, 'password')}
-								error={
-									!form.controls.password.isValid &&
-									form.controls.password.isTouched
-								}
+								onChange={onChange}
+								errorText="Please enter a valid password(at least 6 characters)."
+								validator={value => value.length >= 6}
 							/>
-							<Typography variant="caption" color="error">
-								{!form.controls.password.isValid &&
-									form.controls.password.isTouched &&
-									'Password must be atleast 6 characters long'}
-							</Typography>
 						</Grid>
 					</Grid>
 					{error && (
@@ -163,7 +112,7 @@ const LogIn = () => {
 						fullWidth
 						variant="contained"
 						sx={{ mt: 3, mb: 2 }}
-						disabled={!form.isValid}
+						disabled={!formState.isValid}
 					>
 						Log In
 					</Button>
