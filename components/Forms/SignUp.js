@@ -1,9 +1,11 @@
-import { useEffect } from 'react';
+import { useEffect, useContext } from 'react';
 import useForm from '../../hooks/useForm';
 import useHttp from '../../hooks/useHttp';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
 
+import { reqRegister } from '../../services/api/auth';
+import authContext from '../../helpers/auth-context';
 import Button from '@mui/material/Button';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
@@ -13,6 +15,7 @@ import Container from '@mui/material/Container';
 import Input from '../Utils/Input';
 
 const SignUp = () => {
+	const { authenticate } = useContext(authContext);
 	const router = useRouter();
 	const { isLoading, error, sendRequest, data } = useHttp();
 	const { formState, onChange } = useForm({
@@ -27,10 +30,10 @@ const SignUp = () => {
 
 	useEffect(() => {
 		if (!error && data) {
-			console.log(data);
+			authenticate(data.user);
 			router.push('/');
 		}
-	}, [data, error, router]);
+	}, [data, error, router, authenticate]);
 
 	const handleSubmit = event => {
 		event.preventDefault();
@@ -41,23 +44,7 @@ const SignUp = () => {
 			lastName: formState.controls.lastName.value,
 		};
 
-		sendRequest(async () => {
-			const response = await fetch('/api/auth/register', {
-				method: 'POST',
-				headers: {
-					'Content-Type': 'application/json',
-				},
-				body: JSON.stringify(user),
-			});
-
-			const data = await response.json();
-
-			if (!response.ok) {
-				throw new Error(data.message);
-			}
-
-			return data;
-		});
+		sendRequest(reqRegister, user);
 	};
 
 	return (

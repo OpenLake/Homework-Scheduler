@@ -1,5 +1,6 @@
 import mongoose from 'mongoose';
 import brcypt from 'bcryptjs';
+import CustomError from '../helpers/api/CustomError';
 import jwt from 'jsonwebtoken';
 
 const userSchema = new mongoose.Schema({
@@ -22,6 +23,16 @@ const userSchema = new mongoose.Schema({
 	},
 });
 
+userSchema.statics.verifyToken = async function (token) {
+	try {
+		const decoded = jwt.verify(token, process.env.JWT_SECRET);
+		const user = await this.findById(decoded._id);
+		return user;
+	} catch (error) {
+		throw new CustomError('Invalid token', 401);
+	}
+};
+
 userSchema.methods.hashPassword = async function () {
 	this.password = await brcypt.hash(this.password, 10);
 };
@@ -31,7 +42,9 @@ userSchema.methods.comparePassword = function (password) {
 };
 
 userSchema.methods.generateAuthToken = function () {
-	const token = jwt.sign({ _id: this._id }, process.env.JWT_SECRET);
+	const token = jwt.sign({ _id: this._id }, process.env.JWT_SECRET, {
+		expiresIn: '2d',
+	});
 	return token;
 };
 
