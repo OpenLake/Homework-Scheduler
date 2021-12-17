@@ -21,6 +21,12 @@ const userSchema = new mongoose.Schema({
 		required: true,
 		min: 6,
 	},
+	courses: [
+		{
+			type: mongoose.Schema.Types.ObjectId,
+			ref: 'Course',
+		},
+	],
 });
 
 userSchema.statics.verifyToken = async function (token) {

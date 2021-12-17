@@ -1,12 +1,5 @@
-import { Typography } from '@mui/material';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
+import Home from '../components/Home/Home';
 
-export default function Home() {
-	return (
-		<ThemeProvider theme={createTheme()}>
-			<Typography variant="h4" align="center">
-				Homework scheduler
-			</Typography>
-		</ThemeProvider>
-	);
+export default function Homepage() {
+	return <Home />;
 }

@@ -14,6 +14,7 @@ import { CircularProgress } from '@mui/material';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import Input from '../Utils/Input';
+import LoadingSpinner from '../Utils/LoadingSpinner';
 
 const LogIn = () => {
 	const { authenticate } = useContext(authContext);
@@ -47,9 +48,7 @@ const LogIn = () => {
 
 	return (
 		<Container component="main" maxWidth="xs">
-			<Backdrop open={isLoading} sx={{ zIndex: '100' }}>
-				<CircularProgress style={{ color: '#cecece' }} />
-			</Backdrop>
+			<LoadingSpinner isLoading={isLoading} />
 			<Box
 				sx={{
 					marginTop: 8,
