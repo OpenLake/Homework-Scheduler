@@ -1,3 +1,8 @@
+const DOMAIN =
+	process.env.NODE_ENV === 'production'
+		? 'https://our-domain.com'
+		: 'http://localhost:3000';
+
 const isAuth = (getServerSidePropsFunction, webRoute) => {
 	return async ctx => {
 		const { req } = ctx;
@@ -25,7 +30,7 @@ const isAuth = (getServerSidePropsFunction, webRoute) => {
 			return await getServerSidePropsFunction(ctx);
 		}
 
-		const response = await fetch('http://localhost:3000/api/auth/check', {
+		const response = await fetch(`${DOMAIN}/api/auth/check`, {
 			method: 'POST',
 			headers: {
 				'Content-Type': 'application/json',

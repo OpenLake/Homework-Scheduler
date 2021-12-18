@@ -1,3 +1,8 @@
+/**
+ * @description - This function handles all the errors thrown in any API handler function
+ * @param {Error} err - Error object
+ * @param {Object} res - Response object
+ */
 export default function (err, res) {
 	if (err.name === 'ValidationError') {
 		const errors = Object.keys(err.errors).map(key => err.errors[key].message);

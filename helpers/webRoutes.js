@@ -1,3 +1,11 @@
+/**
+ * @description WebRoutes
+ * @field {Boolean} beforeAuth - Should it be available before authentication?
+ * @field {Boolean} afterAuth - Should it be available after authentication?
+ * @field {String} path - Path to the route
+ * @field {String} title - Title of the route
+ * @field {String} redirect - Redirect path
+ */
 const webRoutes = {
 	login: {
 		beforeAuth: true,
@@ -27,7 +35,6 @@ const webRoutes = {
 		title: 'Profile',
 		redirect: '/login',
 	},
-	about: { beforeAuth: true, afterAuth: true, path: '/about', title: 'About' },
 };
 
 export default webRoutes;

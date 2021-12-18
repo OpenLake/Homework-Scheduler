@@ -18,12 +18,7 @@ import Avatar from '@mui/material/Avatar';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 
-const pages = [
-	webRoutes.dashboard,
-	webRoutes.login,
-	webRoutes.signup,
-	webRoutes.about,
-];
+const pages = [webRoutes.dashboard, webRoutes.login, webRoutes.signup];
 const settings = [webRoutes.profile];
 
 const ResponsiveAppBar = () => {
