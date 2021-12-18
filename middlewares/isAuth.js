@@ -1,22 +1,52 @@
-import CustomError from '../helpers/api/CustomError';
-import User from '../models/User';
-import Cookies from 'cookies';
+const isAuth = (getServerSidePropsFunction, webRoute) => {
+	return async ctx => {
+		const { req } = ctx;
+		const token = req.cookies?.auth || null;
 
-const isAuth = async (req, res) => {
-	const cookies = new Cookies(req, res);
-	const token = cookies.get('auth');
+		if (!token && !webRoute.beforeAuth) {
+			return {
+				redirect: {
+					destination: webRoute.redirect,
+					permanent: false,
+				},
+			};
+		}
 
-	if (!token) {
-		throw new CustomError('You are not logged in', 401);
-	}
+		if (token && !webRoute.afterAuth) {
+			return {
+				redirect: {
+					destination: webRoute.redirect,
+					permanent: false,
+				},
+			};
+		}
 
-	const user = await User.verifyToken(token);
+		if (!token) {
+			return await getServerSidePropsFunction(ctx);
+		}
 
-	if (!user) {
-		throw new CustomError('User not found', 401);
-	}
+		const response = await fetch('http://localhost:3000/api/auth/check', {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json',
+				Authorization: `Bearer ${token}`,
+			},
+			credentials: 'include',
+		});
 
-	req.user = user;
+		if (!response.ok) {
+			return {
+				redirect: {
+					destination: '/',
+					permanent: false,
+				},
+			};
+		}
+
+		const data = await response.json();
+
+		return await getServerSidePropsFunction(ctx, data.user || null);
+	};
 };
 
 export default isAuth;

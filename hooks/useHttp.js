@@ -31,11 +31,16 @@ const useHttp = (initialLoading = false) => {
 		[dispatch],
 	);
 
+	const clearError = useCallback(() => {
+		dispatch({ type: 'ERROR', errorData: null });
+	}, []);
+
 	return {
 		isLoading: httpState.loading,
 		data: httpState.data,
 		error: httpState.error,
 		sendRequest,
+		clearError,
 	};
 };
 

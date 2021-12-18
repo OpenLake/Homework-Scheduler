@@ -22,11 +22,11 @@ export default function AuthWarning(props) {
 			aria-describedby="alert-dialog-description"
 		>
 			<DialogTitle id="alert-dialog-title">
-				{'You are not logged in'}
+				{props.heading || 'You are not logged in'}
 			</DialogTitle>
 			<DialogContent>
 				<DialogContentText id="alert-dialog-description">
-					{'You need to be logged in to use this feature.'}
+					{props.warning || 'You need to be logged in to use this feature.'}
 				</DialogContentText>
 			</DialogContent>
 			<DialogActions>

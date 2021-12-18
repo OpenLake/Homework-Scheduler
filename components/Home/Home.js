@@ -16,19 +16,19 @@ import { Icon } from '@mui/material';
 const Home = () => {
 	const router = useRouter();
 	const [authWarning, setAuthWarning] = useState(false);
-	const [createModal, setCreateModal] = useState(false);
-	const [joinModal, setJoinModal] = useState(false);
+	const [openCreateModal, setOpenCreateModal] = useState(false);
+	const [openJoinModal, setOpenJoinModal] = useState(false);
 	const { isAuthenticated } = useContext(authContext);
 
 	const handleClose = () => {
 		setAuthWarning(false);
-		setCreateModal(false);
-		setJoinModal(false);
+		setOpenCreateModal(false);
+		setOpenJoinModal(false);
 	};
 
 	const onCreateCourse = () => {
 		if (isAuthenticated) {
-			setCreateModal(true);
+			setOpenCreateModal(true);
 		} else {
 			setAuthWarning(true);
 		}
@@ -36,7 +36,7 @@ const Home = () => {
 
 	const onJoinCourse = () => {
 		if (isAuthenticated) {
-			setJoinModal(true);
+			setOpenJoinModal(true);
 		} else {
 			setAuthWarning(true);
 		}
@@ -55,9 +55,14 @@ const Home = () => {
 					pb: 6,
 				}}
 			>
-				<AuthWarning open={authWarning} handleClose={handleClose} />
-				<CreateCourse open={createModal} handleClose={handleClose} />
-				<JoinCourse open={joinModal} handleClose={handleClose} />
+				<AuthWarning
+					open={authWarning}
+					handleClose={handleClose}
+					heading="You need to be logged in to do that"
+					warning="You can only create a course or join one by logging in."
+				/>
+				<CreateCourse open={openCreateModal} handleClose={handleClose} />
+				<JoinCourse open={openJoinModal} handleClose={handleClose} />
 				<Container maxWidth="sm">
 					<Typography
 						component="h1"
@@ -74,10 +79,8 @@ const Home = () => {
 						color="text.secondary"
 						paragraph
 					>
-						A simple, easy to use, and free to use, homework scheduler. Helps to
-						See the load on your students, and to schedule new assignments
-						accordingly. Also gives you the insights of your students{"' "}
-						performance.
+						Helps teachers decide homework deadlines by keeping a track of other
+						commitments and assignments of the students.
 					</Typography>
 					<Typography
 						variant="h4"
@@ -85,7 +88,8 @@ const Home = () => {
 						color="text.secondary"
 						paragraph
 					>
-						Also includes a calendar to keep track of the load on your students.
+						Also includes a calendar to keep track of the events and deadlines
+						of the students.
 					</Typography>
 					<Stack
 						sx={{ pt: 2 }}

@@ -23,7 +23,7 @@ import LoadingSpinner from '../Utils/LoadingSpinner';
 
 export default function CreateCourse(props) {
 	const [courseType, setCourseType] = useState('public');
-	const { isLoading, error, sendRequest, data } = useHttp();
+	const { isLoading, error, sendRequest, data, clearError } = useHttp();
 	const { formState, onChange } = useForm({
 		controls: {
 			courseName: { value: '', isValid: false },
@@ -42,6 +42,11 @@ export default function CreateCourse(props) {
 		sendRequest(reqCreateCourse, data);
 	};
 
+	const onClose = () => {
+		clearError();
+		props.handleClose();
+	};
+
 	useEffect(() => {
 		if (!error && data) {
 			console.log(data);
@@ -49,7 +54,7 @@ export default function CreateCourse(props) {
 	}, [data, error]);
 
 	return (
-		<Dialog open={props.open} onClose={props.handleClose}>
+		<Dialog open={props.open} onClose={onClose}>
 			<LoadingSpinner isLoading={isLoading} />
 			<DialogTitle>Create Course</DialogTitle>
 			<DialogContent>
@@ -105,7 +110,7 @@ export default function CreateCourse(props) {
 				</Grid>
 			</DialogContent>
 			<DialogActions>
-				<Button onClick={props.handleClose}>Cancel</Button>
+				<Button onClick={onClose}>Cancel</Button>
 				<Button onClick={createCourse} disabled={!formState.isValid}>
 					<Icon>send</Icon>
 					Create Course

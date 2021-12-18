@@ -15,7 +15,7 @@ import DialogTitle from '@mui/material/DialogTitle';
 import LoadingSpinner from '../Utils/LoadingSpinner';
 
 export default function CreateCourse(props) {
-	const { isLoading, error, data, sendRequest } = useHttp();
+	const { isLoading, error, data, sendRequest, clearError } = useHttp();
 	const [courseCode, setCourseCode] = useState('');
 	const [isTouched, setIsTouched] = useState(false);
 
@@ -23,8 +23,15 @@ export default function CreateCourse(props) {
 		sendRequest(reqJoinCourse, courseCode);
 	};
 
+	const onClose = () => {
+		setCourseCode('');
+		clearError();
+		setIsTouched(false);
+		props.handleClose();
+	};
+
 	return (
-		<Dialog open={props.open} onClose={props.handleClose}>
+		<Dialog open={props.open} onClose={onClose}>
 			<DialogTitle>Join Course</DialogTitle>
 			<LoadingSpinner isLoading={isLoading} />
 			<DialogContent>
@@ -59,7 +66,7 @@ export default function CreateCourse(props) {
 				</Grid>
 			</DialogContent>
 			<DialogActions>
-				<Button onClick={props.handleClose}>Cancel</Button>
+				<Button onClick={onClose}>Cancel</Button>
 				<Button onClick={createCourse} disabled={!courseCode}>
 					Join
 					<Icon sx={{ ml: 1 }}>send</Icon>

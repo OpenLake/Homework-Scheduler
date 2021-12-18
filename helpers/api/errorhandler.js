@@ -9,7 +9,6 @@ export default function (err, res) {
 				.split(' dup key')[0]
 				.split('_')[0];
 			const dupValue = err.errmsg.split('dup key: ')[1].split('"')[1];
-			console.log(dupValue);
 			res
 				.status(400)
 				.json({ message: `${dupValue} ${dupKey} is already taken.` });

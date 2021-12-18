@@ -98,7 +98,10 @@ const ResponsiveAppBar = () => {
 							}}
 						>
 							{pages.map(page => {
-								if (page.auth && !isAuthenticated) {
+								if (!page.beforeAuth && !isAuthenticated) {
+									return null;
+								}
+								if (!page.afterAuth && isAuthenticated) {
 									return null;
 								}
 								return (
@@ -126,7 +129,10 @@ const ResponsiveAppBar = () => {
 					</Typography>
 					<Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
 						{pages.map(page => {
-							if (page.auth && !isAuthenticated) {
+							if (!page.beforeAuth && !isAuthenticated) {
+								return null;
+							}
+							if (!page.afterAuth && isAuthenticated) {
 								return null;
 							}
 							return (

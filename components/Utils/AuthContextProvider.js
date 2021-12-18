@@ -18,7 +18,7 @@ const AuthContextProvider = props => {
 
 	useEffect(() => {
 		fetch('/api/auth/check', {
-			method: 'GET',
+			method: 'POST',
 			credentials: 'include',
 		})
 			.then(res => res.json())

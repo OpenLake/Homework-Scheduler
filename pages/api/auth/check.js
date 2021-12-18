@@ -6,9 +6,10 @@ import catchErrors from '../../../helpers/api/catchErrors';
 const handler = async (req, res) => {
 	await dbConnect();
 
-	if (req.method === 'GET') {
+	if (req.method === 'POST') {
 		const cookies = new Cookies(req, res);
-		const token = cookies.get('auth');
+		const token =
+			cookies.get('auth') || req.headers.authorization.split(' ')[1] || null;
 		if (token) {
 			const user = await User.verifyToken(token);
 			res.status(200).json({
