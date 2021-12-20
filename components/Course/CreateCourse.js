@@ -1,10 +1,10 @@
 import { useState, useEffect } from 'react';
 import useHttp from '../../hooks/useHttp';
-import useForm from '../../hooks/useForm';
+import { useForm, Controller } from 'react-hook-form';
 
 import { reqCreateCourse } from '../../services/api/courses';
 import Button from '@mui/material/Button';
-import Input from '../Utils/Input';
+import TextField from '@mui/material/TextField';
 import Icon from '@mui/material/Icon';
 import Grid from '@mui/material/Grid';
 import Dialog from '@mui/material/Dialog';
@@ -24,22 +24,14 @@ import LoadingSpinner from '../Utils/LoadingSpinner';
 export default function CreateCourse(props) {
 	const [courseType, setCourseType] = useState('public');
 	const { isLoading, error, sendRequest, data, clearError } = useHttp();
-	const { formState, onChange } = useForm({
-		controls: {
-			courseName: { value: '', isValid: false },
-			courseCode: { value: '', isValid: false },
-		},
-		isValid: false,
-	});
+	const {
+		handleSubmit,
+		control,
+		formState: { errors },
+	} = useForm();
 
-	const createCourse = () => {
-		const data = {
-			courseName: formState.controls.courseName.value,
-			courseCode: formState.controls.courseCode.value,
-			courseType,
-		};
-
-		sendRequest(reqCreateCourse, data);
+	const createCourse = formData => {
+		sendRequest(reqCreateCourse, { ...formData, courseType });
 	};
 
 	const onClose = () => {
@@ -61,19 +53,28 @@ export default function CreateCourse(props) {
 				<DialogContentText>
 					Enter the course details below to create a new course.
 				</DialogContentText>
-				<Grid container spacing={2} sx={{ mt: 2 }}>
+				<Grid container spacing={2} sx={{ mt: 2 }} component="form" noValidate>
 					<Grid item xs={12}>
-						<Input
-							autoFocus
-							required
-							fullWidth
-							type="text"
-							id="courseName"
-							label="Course Name"
-							onChange={onChange}
-							errorText="Please enter a course name."
-							validator={value => value.trim().length > 0}
+						<Controller
+							name="courseName"
+							control={control}
+							rules={{ required: 'Course Name is required' }}
+							render={({ field }) => (
+								<TextField
+									{...field}
+									label="Course Name"
+									autoFocus
+									required
+									fullWidth
+									type="text"
+								/>
+							)}
 						/>
+						{errors.courseName && (
+							<Typography variant="caption" color="error">
+								{errors.courseName.message}
+							</Typography>
+						)}
 					</Grid>
 					<Grid item xs={12}>
 						<FormControl fullWidth>
@@ -91,19 +92,34 @@ export default function CreateCourse(props) {
 						</FormControl>
 					</Grid>
 					<Grid item xs={12}>
-						<Input
-							required
-							fullWidth
-							type="text"
-							id="courseCode"
-							label="Course Code"
-							onChange={onChange}
-							errorText="Please enter a course code."
-							validator={value => value.trim().length > 0}
+						<Controller
+							name="courseCode"
+							control={control}
+							rules={{ required: 'Course Code is required' }}
+							render={({ field }) => (
+								<TextField
+									{...field}
+									required
+									fullWidth
+									type="text"
+									label="Course Code"
+								/>
+							)}
 						/>
-						{error && (
+						{errors.courseCode && (
+							<Typography variant="caption" color="error">
+								{errors.courseCode.message}
+							</Typography>
+						)}
+						{error && error.courseCode && (
 							<Typography variant="body2" mt={2} color="error">
-								{error}
+								{error.courseCode}
+							</Typography>
+						)}
+						{/* General Message */}
+						{error && error.message && (
+							<Typography variant="body2" mt={2} color="error">
+								{error.message}
 							</Typography>
 						)}
 					</Grid>
@@ -111,7 +127,10 @@ export default function CreateCourse(props) {
 			</DialogContent>
 			<DialogActions>
 				<Button onClick={onClose}>Cancel</Button>
-				<Button onClick={createCourse} disabled={!formState.isValid}>
+				<Button
+					disabled={Object.keys(errors).length > 0}
+					onClick={handleSubmit(createCourse)}
+				>
 					<Icon>send</Icon>
 					Create Course
 				</Button>

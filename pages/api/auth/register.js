@@ -1,6 +1,6 @@
 import Cookies from 'cookies';
 import catchErrors from '../../../helpers/api/catchErrors';
-import CustomError from '../../../helpers/api/CustomError';
+
 import User from '../../../models/User';
 
 const handler = async (req, res) => {
@@ -20,7 +20,7 @@ const handler = async (req, res) => {
 
 		res.status(201).json({ user, token });
 	} else {
-		throw new CustomError('Method not allowed', 405);
+		res.status(405).json({ message: 'Method not allowed' });
 	}
 };
 

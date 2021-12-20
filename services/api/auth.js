@@ -1,3 +1,5 @@
+import CustomError from '../../helpers/api/CustomError';
+
 const reqRegister = async user => {
 	const response = await fetch('/api/auth/register', {
 		method: 'POST',
@@ -10,7 +12,7 @@ const reqRegister = async user => {
 	const data = await response.json();
 
 	if (!response.ok) {
-		throw new Error(data.message);
+		throw new CustomError(data.message);
 	}
 
 	return data;
@@ -28,7 +30,7 @@ const reqLogin = async user => {
 	const data = await response.json();
 
 	if (!response.ok) {
-		throw new Error(data.message);
+		throw new CustomError(data.message);
 	}
 
 	return data;
@@ -45,7 +47,7 @@ const reqLogout = async () => {
 	const data = await response.json();
 
 	if (!response.ok) {
-		throw new Error(data.message);
+		throw new CustomError(data.message);
 	}
 
 	return data;

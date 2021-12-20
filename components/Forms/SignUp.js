@@ -1,5 +1,5 @@
 import { useEffect, useContext } from 'react';
-import useForm from '../../hooks/useForm';
+import { useForm, Controller } from 'react-hook-form';
 import useHttp from '../../hooks/useHttp';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
@@ -9,25 +9,21 @@ import authContext from '../../helpers/auth-context';
 import Button from '@mui/material/Button';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
-import { Backdrop, CircularProgress, Link as MUILink } from '@mui/material';
+import { Link as MUILink } from '@mui/material';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
-import Input from '../Utils/Input';
+import TextField from '@mui/material/TextField';
 import LoadingSpinner from '../Utils/LoadingSpinner';
 
 const SignUp = () => {
 	const { authenticate } = useContext(authContext);
 	const router = useRouter();
 	const { isLoading, error, sendRequest, data } = useHttp();
-	const { formState, onChange } = useForm({
-		controls: {
-			email: { value: '', isValid: false },
-			password: { value: '', isValid: false },
-			firstName: { value: '', isValid: false },
-			lastName: { value: '', isValid: true },
-		},
-		isValid: false,
-	});
+	const {
+		handleSubmit,
+		control,
+		formState: { errors },
+	} = useForm();
 
 	useEffect(() => {
 		if (!error && data) {
@@ -36,16 +32,8 @@ const SignUp = () => {
 		}
 	}, [data, error, router, authenticate]);
 
-	const handleSubmit = event => {
-		event.preventDefault();
-		const user = {
-			email: formState.controls.email.value,
-			password: formState.controls.password.value,
-			firstName: formState.controls.firstName.value,
-			lastName: formState.controls.lastName.value,
-		};
-
-		sendRequest(reqRegister, user);
+	const onSubmit = formData => {
+		sendRequest(reqRegister, formData);
 	};
 
 	return (
@@ -62,49 +50,110 @@ const SignUp = () => {
 				<Typography component="h1" variant="h5">
 					Sign up
 				</Typography>
-				<Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3 }}>
+				<Box
+					component="form"
+					noValidate
+					onSubmit={handleSubmit(onSubmit)}
+					sx={{ mt: 3 }}
+				>
 					<Grid container spacing={2}>
 						<Grid item xs={12} sm={6}>
-							<Input
-								required
-								fullWidth
-								id="firstName"
-								label="First Name"
-								autoFocus
-								onChange={onChange}
-								validator={value => value.trim().length > 0}
-								errorText="Please enter your first name"
+							<Controller
+								name="firstName"
+								control={control}
+								rules={{ required: 'First name is required' }}
+								defaultValue=""
+								render={({ field }) => (
+									<TextField
+										{...field}
+										required
+										fullWidth
+										label="First Name"
+										autoFocus
+										error={!!errors.firstName}
+									/>
+								)}
 							/>
+							{errors.firstName && (
+								<Typography variant="caption" color="error">
+									{errors.firstName.message}
+								</Typography>
+							)}
+							{error && error.firstName && (
+								<Typography variant="caption" color="error">
+									{error.firstName}
+								</Typography>
+							)}
 						</Grid>
 						<Grid item xs={12} sm={6}>
-							<Input fullWidth id="lastName" label="Last Name" />
-						</Grid>
-						<Grid item xs={12}>
-							<Input
-								required
-								fullWidth
-								type="email"
-								id="email"
-								label="Email Address"
-								onChange={onChange}
-								validator={value => value.includes('@')}
-								errorText="Please enter a valid email address"
+							<Controller
+								name="lastName"
+								control={control}
+								defaultValue=""
+								render={({ field }) => (
+									<TextField {...field} fullWidth label="Last Name" />
+								)}
 							/>
 						</Grid>
 						<Grid item xs={12}>
-							<Input
-								required
-								fullWidth
-								label="Password"
-								type="password"
-								id="password"
-								onChange={onChange}
-								validator={value => value.trim().length >= 6}
-								errorText="Password must be at least 6 characters"
+							<Controller
+								name="email"
+								control={control}
+								defaultValue=""
+								rules={{
+									required: 'Email is required',
+									pattern: { value: /^\S+@\S+$/i, message: 'Email is invalid' },
+								}}
+								render={({ field }) => (
+									<TextField
+										{...field}
+										required
+										fullWidth
+										type="email"
+										label="Email Address"
+									/>
+								)}
 							/>
+							{errors.email && (
+								<Typography variant="caption" color="error">
+									{errors.email.message}
+								</Typography>
+							)}
+							{error && error.email && (
+								<Typography variant="caption" color="error">
+									{error.email}
+								</Typography>
+							)}
+						</Grid>
+						<Grid item xs={12}>
+							<Controller
+								name="password"
+								control={control}
+								defaultValue=""
+								rules={{ required: 'Password is required' }}
+								render={({ field }) => (
+									<TextField
+										{...field}
+										required
+										fullWidth
+										label="Password"
+										type="password"
+									/>
+								)}
+							/>
+							{errors.password && (
+								<Typography variant="caption" color="error">
+									{errors.password.message}
+								</Typography>
+							)}
+							{error && error.password && (
+								<Typography variant="caption" color="error">
+									{error.password}
+								</Typography>
+							)}
 						</Grid>
 					</Grid>
-					{error && (
+					{typeof error === 'string' && (
 						<Typography variant="body1" color="error" sx={{ mt: 2 }}>
 							{error}
 						</Typography>
@@ -114,7 +163,7 @@ const SignUp = () => {
 						fullWidth
 						variant="contained"
 						sx={{ mt: 3, mb: 2 }}
-						disabled={!formState.isValid}
+						disabled={Object.keys(errors).length > 0}
 					>
 						Sign Up
 					</Button>

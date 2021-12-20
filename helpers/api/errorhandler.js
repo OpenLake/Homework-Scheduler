@@ -5,8 +5,11 @@
  */
 export default function (err, res) {
 	if (err.name === 'ValidationError') {
-		const errors = Object.keys(err.errors).map(key => err.errors[key].message);
-		res.status(400).json({ message: 'Validation failed', errors });
+		const errors = {};
+		for (const key in err.errors) {
+			errors[key] = err.errors[key].message;
+		}
+		err.message = errors;
 	} else if (err.name === 'MongoServerError') {
 		if (err.code === 11000) {
 			const dupKey = err.errmsg
@@ -14,15 +17,10 @@ export default function (err, res) {
 				.split(' dup key')[0]
 				.split('_')[0];
 			const dupValue = err.errmsg.split('dup key: ')[1].split('"')[1];
-			res
-				.status(400)
-				.json({ message: `${dupValue} ${dupKey} is already taken.` });
-		} else {
-			res.status(500).json({ message: err.message || 'Internal server error' });
+			err.message = { [dupKey]: `${dupValue} already exists` };
 		}
-	} else {
-		res
-			.status(err.statusCode || 500)
-			.json({ message: err.message || 'Internal server error' });
 	}
+	res
+		.status(err.statusCode || 500)
+		.json({ message: err.message || 'Internal server error' });
 }

@@ -7,14 +7,10 @@ const isAuth = async (req, res) => {
 	const token = cookies.get('auth');
 
 	if (!token) {
-		throw new CustomError('You are not logged in', 401);
+		throw new CustomError({ message: 'You are not logged in' }, 401);
 	}
 
 	const user = await User.verifyToken(token);
-
-	if (!user) {
-		throw new CustomError('User not found', 401);
-	}
 
 	req.user = user;
 };

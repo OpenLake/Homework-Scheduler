@@ -1,3 +1,4 @@
+import CustomError from '../../helpers/api/CustomError';
 export const reqCreateCourse = async course => {
 	const response = await fetch('/api/courses/create', {
 		method: 'POST',
@@ -11,7 +12,7 @@ export const reqCreateCourse = async course => {
 	const data = await response.json();
 
 	if (!response.ok) {
-		throw new Error(data.message);
+		throw new CustomError(data.message);
 	}
 
 	return data;
@@ -30,7 +31,7 @@ export const reqJoinCourse = async courseCode => {
 	const data = await response.json();
 
 	if (!response.ok) {
-		throw new Error(data.message);
+		throw new CustomError(data.message);
 	}
 
 	return data;

@@ -5,14 +5,11 @@ import webRoutes from '../../helpers/webRoutes';
 import isAuth from '../../middlewares/isAuth';
 import Container from '@mui/material/Container';
 
-const dashboard = ({ user }) => {
+const Dashboard = ({ user }) => {
 	return (
 		<Container maxWidth="md" sx={{ mt: 2 }}>
-			<Typography variant="h3" component="h1">
-				Dashboard
-			</Typography>
-			<Typography variant="h6" component="h2" color="textSecondary">
-				Welcome Back {user.firstName} {user.lastName}
+			<Typography variant="h4" sx={{ mb: 2 }}>
+				Welcome {user.firstName} {user.lastName}
 			</Typography>
 		</Container>
 	);
@@ -24,4 +21,4 @@ export const getServerSideProps = isAuth(async (ctx, user) => {
 	};
 }, webRoutes.dashboard);
 
-export default dashboard;
+export default Dashboard;

@@ -1,5 +1,5 @@
 import { useEffect, useContext } from 'react';
-import useForm from '../../hooks/useForm';
+import { useForm, Controller } from 'react-hook-form';
 import useHttp from '../../hooks/useHttp';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
@@ -12,20 +12,17 @@ import Box from '@mui/material/Box';
 import { Backdrop, Link as MUILink } from '@mui/material';
 import { CircularProgress } from '@mui/material';
 import Typography from '@mui/material/Typography';
+import TextField from '@mui/material/TextField';
 import Container from '@mui/material/Container';
-import Input from '../Utils/Input';
 import LoadingSpinner from '../Utils/LoadingSpinner';
 
 const LogIn = () => {
 	const { authenticate } = useContext(authContext);
-	const { formState, onChange } = useForm({
-		controls: {
-			email: { value: '', isValid: false },
-			password: { value: '', isValid: false },
-		},
-		isValid: false,
-	});
-
+	const {
+		handleSubmit,
+		control,
+		formState: { errors },
+	} = useForm();
 	const router = useRouter();
 	const { isLoading, error, sendRequest, data } = useHttp();
 
@@ -36,14 +33,8 @@ const LogIn = () => {
 		}
 	}, [error, data, router, authenticate]);
 
-	const handleSubmit = event => {
-		event.preventDefault();
-		const user = {
-			email: formState.controls.email.value,
-			password: formState.controls.password.value,
-		};
-
-		sendRequest(reqLogin, user);
+	const onSubmit = formData => {
+		sendRequest(reqLogin, formData);
 	};
 
 	return (
@@ -60,36 +51,82 @@ const LogIn = () => {
 				<Typography component="h1" variant="h5">
 					Log In
 				</Typography>
-				<Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3 }}>
+				<Box
+					component="form"
+					noValidate
+					onSubmit={handleSubmit(onSubmit)}
+					sx={{ mt: 3 }}
+				>
 					<Grid container spacing={2}>
 						<Grid item xs={12}>
-							<Input
-								autoFocus
-								required
-								fullWidth
-								type="email"
-								id="email"
-								label="Email Address"
-								onChange={onChange}
-								errorText="Please enter a valid email address."
-								validator={value => value.includes('@')}
+							<Controller
+								name="email"
+								control={control}
+								rules={{
+									required: 'Email is required',
+									pattern: {
+										value: /^\S+@\S+$/i,
+										message: 'Email must be valid',
+									},
+								}}
+								defaultValue=""
+								render={({ field }) => (
+									<TextField
+										{...field}
+										autoFocus
+										required
+										fullWidth
+										type="email"
+										label="Email Address"
+										error={!!errors.email}
+									/>
+								)}
 							/>
+							{errors.email && (
+								<Typography variant="caption" color="error">
+									{errors.email.message}
+								</Typography>
+							)}
+							{error && error.email && (
+								<Typography variant="caption" color="error">
+									{error.email}
+								</Typography>
+							)}
 						</Grid>
 						<Grid item xs={12}>
-							<Input
-								required
-								fullWidth
-								label="Password"
-								type="password"
-								id="password"
-								onChange={onChange}
-								errorText="Please enter a valid password(at least 6 characters)."
-								validator={value => value.length >= 6}
+							<Controller
+								name="password"
+								control={control}
+								rules={{
+									required: 'Password is required',
+								}}
+								defaultValue=""
+								render={({ field }) => (
+									<TextField
+										{...field}
+										required
+										fullWidth
+										label="Password"
+										type="password"
+										error={!!errors.password}
+									/>
+								)}
 							/>
+							{errors.password && (
+								<Typography variant="caption" color="error">
+									{errors.password.message}
+								</Typography>
+							)}
+							{error && error.password && (
+								<Typography variant="caption" color="error">
+									{error.password}
+								</Typography>
+							)}
 						</Grid>
 					</Grid>
-					{error && (
-						<Typography variant="body1" color="error" sx={{ mt: 2 }}>
+					{/* General Error */}
+					{typeof error === 'string' && (
+						<Typography variant="caption" color="error">
 							{error}
 						</Typography>
 					)}
@@ -98,7 +135,7 @@ const LogIn = () => {
 						fullWidth
 						variant="contained"
 						sx={{ mt: 3, mb: 2 }}
-						disabled={!formState.isValid}
+						disabled={Object.keys(errors).length > 0}
 					>
 						Log In
 					</Button>

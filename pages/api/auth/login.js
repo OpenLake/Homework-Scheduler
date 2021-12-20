@@ -8,13 +8,13 @@ const handler = async (req, res) => {
 		const user = await User.findOne({ email: req.body.email });
 
 		if (!user) {
-			throw new CustomError('Invalid credentials', 401);
+			throw new CustomError({ email: 'Email is not registered' }, 401);
 		}
 
 		const verify = await user.comparePassword(req.body.password);
 
 		if (!verify) {
-			throw new CustomError('Invalid credentials', 401);
+			throw new CustomError({ password: 'Password is incorrect' }, 401);
 		}
 
 		const token = user.generateAuthToken();

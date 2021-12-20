@@ -6,8 +6,9 @@
  * @example - throw new CustomError('Error message', 500)
  */
 class CustomError extends Error {
-	constructor(message, statusCode) {
-		super(message);
+	constructor(error, statusCode) {
+		super();
+		this.message = error;
 		this.statusCode = statusCode;
 	}
 }
