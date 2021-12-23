@@ -8,7 +8,7 @@ const handler = async (req, res) => {
 
 	const { courseCode } = req.body;
 
-	const course = await Course.findOne({ courseCode });
+	const course = await Course.findOne({ code: courseCode });
 
 	if (!course) {
 		throw new CustomError('Course not found', 404);

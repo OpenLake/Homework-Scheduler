@@ -24,7 +24,7 @@ const Footer = () => {
 				position: 'fixed',
 				bottom: 0,
 				width: '100%',
-				height: '3rem',
+				height: '50px',
 				backgroundColor: 'background.paper',
 				borderTop: '1px solid rgba(0, 0, 0, 0.12)',
 				padding: '1rem',

@@ -15,8 +15,8 @@ function MyApp({ Component, pageProps }) {
 			<AuthContextProvider>
 				<Header />
 				<Component {...pageProps} />
+				<Footer />
 			</AuthContextProvider>
-			<Footer />
 		</Fragment>
 	);
 }
