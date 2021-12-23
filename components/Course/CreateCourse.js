@@ -22,22 +22,38 @@ import {
 import LoadingSpinner from '../Utils/LoadingSpinner';
 
 export default function CreateCourse(props) {
-	const [courseType, setCourseType] = useState('public');
+	const [type, setCourseType] = useState('public');
 	const { isLoading, error, sendRequest, data, clearError } = useHttp();
 	const {
 		handleSubmit,
 		control,
 		formState: { errors },
+		reset,
+		watch,
 	} = useForm();
 
 	const createCourse = formData => {
-		sendRequest(reqCreateCourse, { ...formData, courseType });
+		sendRequest(reqCreateCourse, { ...formData, type });
 	};
 
 	const onClose = () => {
 		clearError();
+		reset({
+			name: '',
+			code: '',
+			description: '',
+		});
 		props.handleClose();
 	};
+
+	useEffect(() => {
+		const sub = watch((value, { name }) => {
+			if (error && name === 'code') {
+				clearError();
+			}
+		});
+		return () => sub.unsubscribe();
+	}, [watch, error, clearError]);
 
 	useEffect(() => {
 		if (!error && data) {
@@ -54,11 +70,12 @@ export default function CreateCourse(props) {
 					Enter the course details below to create a new course.
 				</DialogContentText>
 				<Grid container spacing={2} sx={{ mt: 2 }} component="form" noValidate>
-					<Grid item xs={12}>
+					<Grid item xs={12} sm={6}>
 						<Controller
-							name="courseName"
+							name="name"
 							control={control}
 							rules={{ required: 'Course Name is required' }}
+							defaultValue=""
 							render={({ field }) => (
 								<TextField
 									{...field}
@@ -67,23 +84,23 @@ export default function CreateCourse(props) {
 									required
 									fullWidth
 									type="text"
+									error={!!errors.name}
 								/>
 							)}
 						/>
-						{errors.courseName && (
+						{errors.name && (
 							<Typography variant="caption" color="error">
-								{errors.courseName.message}
+								{errors.name.message}
 							</Typography>
 						)}
 					</Grid>
-					<Grid item xs={12}>
+					<Grid item xs={12} sm={6}>
 						<FormControl fullWidth>
-							<InputLabel id="demo-simple-select-label">Course Type</InputLabel>
+							<InputLabel id="courseType">Course Type</InputLabel>
 							<Select
-								labelId="demo-simple-select-label"
-								id="demo-simple-select"
+								labelId="courseType"
 								label="Course Type"
-								value={courseType}
+								value={type}
 								onChange={e => setCourseType(e.target.value)}
 							>
 								<MenuItem value="public">Public</MenuItem>
@@ -93,9 +110,10 @@ export default function CreateCourse(props) {
 					</Grid>
 					<Grid item xs={12}>
 						<Controller
-							name="courseCode"
+							name="code"
 							control={control}
 							rules={{ required: 'Course Code is required' }}
+							defaultValue=""
 							render={({ field }) => (
 								<TextField
 									{...field}
@@ -103,25 +121,37 @@ export default function CreateCourse(props) {
 									fullWidth
 									type="text"
 									label="Course Code"
+									error={!!errors.code || (error && !!error.code)}
 								/>
 							)}
 						/>
-						{errors.courseCode && (
+						{errors.code && (
 							<Typography variant="caption" color="error">
-								{errors.courseCode.message}
+								{errors.code.message}
 							</Typography>
 						)}
-						{error && error.courseCode && (
-							<Typography variant="body2" mt={2} color="error">
-								{error.courseCode}
+						{error && error.code && (
+							<Typography variant="caption" mt={2} color="error">
+								{error.code}
 							</Typography>
 						)}
-						{/* General Message */}
-						{error && error.message && (
-							<Typography variant="body2" mt={2} color="error">
-								{error.message}
-							</Typography>
-						)}
+					</Grid>
+					<Grid item xs={12}>
+						<Controller
+							name="description"
+							control={control}
+							defaultValue=""
+							render={({ field }) => (
+								<TextField
+									{...field}
+									label="Course Description"
+									fullWidth
+									type="text"
+									multiline
+									rows={4}
+								/>
+							)}
+						/>
 					</Grid>
 				</Grid>
 			</DialogContent>

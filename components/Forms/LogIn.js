@@ -9,8 +9,7 @@ import authContext from '../../helpers/auth-context';
 import Button from '@mui/material/Button';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
-import { Backdrop, Link as MUILink } from '@mui/material';
-import { CircularProgress } from '@mui/material';
+import { Link as MUILink } from '@mui/material';
 import Typography from '@mui/material/Typography';
 import TextField from '@mui/material/TextField';
 import Container from '@mui/material/Container';
@@ -22,9 +21,19 @@ const LogIn = () => {
 		handleSubmit,
 		control,
 		formState: { errors },
+		watch,
 	} = useForm();
 	const router = useRouter();
-	const { isLoading, error, sendRequest, data } = useHttp();
+	const { isLoading, error, sendRequest, data, clearError } = useHttp();
+
+	useEffect(() => {
+		const sub = watch((value, { name }) => {
+			if (error && Object.keys(error).includes(name)) {
+				clearError();
+			}
+		});
+		return () => sub.unsubscribe();
+	}, [watch, error, clearError]);
 
 	useEffect(() => {
 		if (!error && data) {
@@ -78,7 +87,7 @@ const LogIn = () => {
 										fullWidth
 										type="email"
 										label="Email Address"
-										error={!!errors.email}
+										error={!!errors.email || (error && !!error.email)}
 									/>
 								)}
 							/>
@@ -108,7 +117,7 @@ const LogIn = () => {
 										fullWidth
 										label="Password"
 										type="password"
-										error={!!errors.password}
+										error={!!errors.password || (error && !!error.password)}
 									/>
 								)}
 							/>
@@ -124,12 +133,6 @@ const LogIn = () => {
 							)}
 						</Grid>
 					</Grid>
-					{/* General Error */}
-					{typeof error === 'string' && (
-						<Typography variant="caption" color="error">
-							{error}
-						</Typography>
-					)}
 					<Button
 						type="submit"
 						fullWidth

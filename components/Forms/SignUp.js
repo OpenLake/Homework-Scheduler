@@ -18,12 +18,22 @@ import LoadingSpinner from '../Utils/LoadingSpinner';
 const SignUp = () => {
 	const { authenticate } = useContext(authContext);
 	const router = useRouter();
-	const { isLoading, error, sendRequest, data } = useHttp();
+	const { isLoading, error, sendRequest, data, clearError } = useHttp();
 	const {
 		handleSubmit,
 		control,
 		formState: { errors },
+		watch,
 	} = useForm();
+
+	useEffect(() => {
+		const sub = watch((value, { name }) => {
+			if (error && Object.keys(error).includes(name)) {
+				clearError();
+			}
+		});
+		return () => sub.unsubscribe();
+	}, [watch, clearError, error]);
 
 	useEffect(() => {
 		if (!error && data) {
@@ -79,11 +89,6 @@ const SignUp = () => {
 									{errors.firstName.message}
 								</Typography>
 							)}
-							{error && error.firstName && (
-								<Typography variant="caption" color="error">
-									{error.firstName}
-								</Typography>
-							)}
 						</Grid>
 						<Grid item xs={12} sm={6}>
 							<Controller
@@ -111,6 +116,7 @@ const SignUp = () => {
 										fullWidth
 										type="email"
 										label="Email Address"
+										error={!!errors.email || (error && !!error.email)}
 									/>
 								)}
 							/>
@@ -138,6 +144,7 @@ const SignUp = () => {
 										fullWidth
 										label="Password"
 										type="password"
+										error={!!errors.password}
 									/>
 								)}
 							/>
@@ -146,18 +153,8 @@ const SignUp = () => {
 									{errors.password.message}
 								</Typography>
 							)}
-							{error && error.password && (
-								<Typography variant="caption" color="error">
-									{error.password}
-								</Typography>
-							)}
 						</Grid>
 					</Grid>
-					{typeof error === 'string' && (
-						<Typography variant="body1" color="error" sx={{ mt: 2 }}>
-							{error}
-						</Typography>
-					)}
 					<Button
 						type="submit"
 						fullWidth

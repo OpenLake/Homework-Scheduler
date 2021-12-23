@@ -8,8 +8,7 @@ const handler = async (req, res) => {
 
 	if (req.method === 'POST') {
 		const cookies = new Cookies(req, res);
-		const token =
-			cookies.get('auth') || req.headers.authorization.split(' ')[1] || null;
+		const token = cookies.get('auth');
 		if (token) {
 			const user = await User.verifyToken(token);
 			res.status(200).json({
@@ -17,7 +16,7 @@ const handler = async (req, res) => {
 				user,
 			});
 		} else {
-			res.status(401).json({
+			res.status(200).json({
 				isAuth: false,
 			});
 		}
