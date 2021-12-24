@@ -3,8 +3,9 @@ import React from 'react';
 import webRoutes from '../../helpers/webRoutes';
 import isAuth from '../../middlewares/isAuth';
 
-import { Box, Container, Typography } from '@mui/material';
+import { Box, Container } from '@mui/material';
 import CourseList from '../../components/Course/CourseList';
+import NoCourses from '../../components/Course/NoCourse';
 
 const Dashboard = props => {
 	const myCourses = JSON.parse(props.myCourses);
@@ -18,11 +19,7 @@ const Dashboard = props => {
 			{enrolledCourses.length > 0 && (
 				<CourseList title="Enrolled Courses" courses={enrolledCourses} />
 			)}
-			{myCourses.length === 0 && enrolledCourses.length === 0 && (
-				<Typography variant="h5" gutterBottom>
-					You have no courses.
-				</Typography>
-			)}
+			{myCourses.length === 0 && enrolledCourses.length === 0 && <NoCourses />}
 			<Box height="10px" />
 		</Container>
 	);

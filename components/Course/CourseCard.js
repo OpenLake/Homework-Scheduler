@@ -8,19 +8,19 @@ const CourseCard = ({ course }) => {
 		<Card
 			variant="outlined"
 			onMouseEnter={() => {
-				setBgColor('#ededed');
+				setBgColor('#ffeeee');
 			}}
 			onMouseLeave={() => {
 				setBgColor('#fafafa');
 			}}
 			sx={{
 				bgcolor: bgColor,
-				borderRadius: 1,
+				borderRadius: 2,
 				height: '100%',
 				maxHeight: '220px',
 				cursor: 'pointer',
 				transition: 'all 0.1s ease-in-out',
-				borderWidth: '2px',
+				borderWidth: '1px',
 			}}
 		>
 			<CardContent>
@@ -28,7 +28,17 @@ const CourseCard = ({ course }) => {
 				<Typography variant="body2" color="textSecondary">
 					{course.code}
 				</Typography>
-				<Typography variant="body1" noWrap>
+				<Typography
+					variant="body1"
+					sx={{
+						textOverflow: 'ellipsis',
+						overflow: 'hidden',
+						whiteSpace: 'normal',
+						display: '-webkit-box',
+						WebkitLineClamp: '4',
+						WebkitBoxOrient: 'vertical',
+					}}
+				>
 					{course.description}
 				</Typography>
 			</CardContent>
