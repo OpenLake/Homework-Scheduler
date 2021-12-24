@@ -2,8 +2,15 @@ import { useState } from 'react';
 
 import { Card, CardContent, Typography } from '@mui/material';
 
-const CourseCard = ({ course }) => {
+const CourseCard = ({ course, onClick }) => {
 	const [bgColor, setBgColor] = useState('#fafafa');
+
+	const handleClick = () => {
+		if (onClick) {
+			onClick(course);
+		}
+	};
+
 	return (
 		<Card
 			variant="outlined"
@@ -22,6 +29,7 @@ const CourseCard = ({ course }) => {
 				transition: 'all 0.1s ease-in-out',
 				borderWidth: '1px',
 			}}
+			onClick={handleClick}
 		>
 			<CardContent>
 				<Typography variant="h5">{course.name}</Typography>

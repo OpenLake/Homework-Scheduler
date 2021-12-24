@@ -1,10 +1,12 @@
 import { useState } from 'react';
+import { useRouter } from 'next/router';
 import { Box, Stack, Typography, Button, Icon } from '@mui/material';
 
 import CreateCourse from './CreateCourse';
 
-const NoCourse = () => {
+const NoCourse = ({ title, subTitle, addBtn = true, browseBtn = true }) => {
 	const [openCreateModal, setOpenCreateModal] = useState(false);
+	const router = useRouter();
 
 	return (
 		<Box
@@ -22,32 +24,45 @@ const NoCourse = () => {
 				handleClose={() => setOpenCreateModal(false)}
 			/>
 			<Typography variant="h3" gutterBottom>
-				You are not enrolled in any Courses
+				{title || 'You are not enrolled in any Courses'}
 			</Typography>
 			<Typography variant="body1" gutterBottom>
-				Create or browse courses to enroll in them.
+				{subTitle || 'Create or browse courses to enroll in them.'}
 			</Typography>
+
 			<Stack sx={{ pt: 2 }} direction="row" spacing={2} justifyContent="center">
-				<Button
-					variant="contained"
-					color="primary"
-					onClick={() => setOpenCreateModal(true)}
-				>
-					<Icon>add</Icon>
-					Create Course
-				</Button>
-				<Typography
-					variant="h6"
-					align="center"
-					color="text.secondary"
-					paragraph
-				>
-					OR
-				</Typography>
-				<Button variant="contained" color="secondary">
-					<Icon>search</Icon>
-					Browse Courses
-				</Button>
+				{addBtn && (
+					<Button
+						variant="contained"
+						color="primary"
+						onClick={() => setOpenCreateModal(true)}
+					>
+						<Icon>add</Icon>
+						Create Course
+					</Button>
+				)}
+				{browseBtn && (
+					<Typography
+						variant="h6"
+						align="center"
+						color="text.secondary"
+						paragraph
+					>
+						OR
+					</Typography>
+				)}
+				{browseBtn && (
+					<Button
+						variant="contained"
+						color="secondary"
+						onClick={() => {
+							router.push('/courses');
+						}}
+					>
+						<Icon>search</Icon>
+						Browse Courses
+					</Button>
+				)}
 			</Stack>
 		</Box>
 	);

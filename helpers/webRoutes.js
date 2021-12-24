@@ -35,6 +35,17 @@ const webRoutes = {
 		title: 'Profile',
 		redirect: '/login',
 	},
+	courses: {
+		beforeAuth: true,
+		afterAuth: true,
+		path: '/courses',
+		title: 'Browse Courses',
+	},
+	course: id => ({
+		beforeAuth: false,
+		afterAuth: true,
+		path: `/courses/${id}`,
+	}),
 };
 
 export default webRoutes;

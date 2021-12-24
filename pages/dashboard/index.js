@@ -1,5 +1,5 @@
+import { useRouter } from 'next/router';
 import Course from '../../models/Course';
-import React from 'react';
 import webRoutes from '../../helpers/webRoutes';
 import isAuth from '../../middlewares/isAuth';
 
@@ -8,16 +8,29 @@ import CourseList from '../../components/Course/CourseList';
 import NoCourses from '../../components/Course/NoCourse';
 
 const Dashboard = props => {
+	const router = useRouter();
 	const myCourses = JSON.parse(props.myCourses);
 	const enrolledCourses = JSON.parse(props.enrolledCourses);
+
+	const onClickCourse = course => {
+		router.push(webRoutes.course(course._id).path);
+	};
 
 	return (
 		<Container sx={{ my: 4 }}>
 			{myCourses.length > 0 && (
-				<CourseList title="Your Courses" courses={myCourses} />
+				<CourseList
+					title="Your Courses"
+					courses={myCourses}
+					onClick={onClickCourse}
+				/>
 			)}
 			{enrolledCourses.length > 0 && (
-				<CourseList title="Enrolled Courses" courses={enrolledCourses} />
+				<CourseList
+					title="Enrolled Courses"
+					courses={enrolledCourses}
+					onClick={onClickCourse}
+				/>
 			)}
 			{myCourses.length === 0 && enrolledCourses.length === 0 && <NoCourses />}
 			<Box height="10px" />
