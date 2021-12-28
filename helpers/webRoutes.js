@@ -45,6 +45,7 @@ const webRoutes = {
 		beforeAuth: false,
 		afterAuth: true,
 		path: `/courses/${id}`,
+		redirect: '/login',
 	}),
 };
 

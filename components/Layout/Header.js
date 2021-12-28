@@ -119,14 +119,16 @@ const ResponsiveAppBar = () => {
 							})}
 						</Menu>
 					</Box>
-					<Typography
-						variant="h6"
-						noWrap
-						component="div"
-						sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}
-					>
-						Homework Scheduler
-					</Typography>
+					<Link href="/" passHref>
+						<MUILink
+							variant="h5"
+							color="inherit"
+							underline="none"
+							sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}
+						>
+							Homework Scheduler
+						</MUILink>
+					</Link>
 					<Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
 						{pages.map(page => {
 							if (!page.beforeAuth && !isAuthenticated) {

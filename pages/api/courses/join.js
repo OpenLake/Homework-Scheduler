@@ -8,10 +8,14 @@ const handler = async (req, res) => {
 
 	const { courseCode } = req.body;
 
-	const course = await Course.findOne({ code: courseCode });
+	const course = await Course.findById(courseCode);
 
 	if (!course) {
 		throw new CustomError('Course not found', 404);
+	}
+
+	if (req.user._id.toString() === course.creator.toString()) {
+		throw new CustomError('You can not join your own course', 400);
 	}
 
 	if (req.user.courses.includes(course._id)) {

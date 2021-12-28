@@ -18,7 +18,7 @@ import LoadingSpinner from '../Utils/LoadingSpinner';
 const SignUp = () => {
 	const { authenticate } = useContext(authContext);
 	const router = useRouter();
-	const { isLoading, error, sendRequest, data, clearError } = useHttp();
+	const { isLoading, error, sendRequest, clearError } = useHttp();
 	const {
 		handleSubmit,
 		control,
@@ -35,15 +35,11 @@ const SignUp = () => {
 		return () => sub.unsubscribe();
 	}, [watch, clearError, error]);
 
-	useEffect(() => {
-		if (!error && data) {
+	const onSubmit = formData => {
+		sendRequest(reqRegister, formData, data => {
 			authenticate(data.user);
 			router.push('/');
-		}
-	}, [data, error, router, authenticate]);
-
-	const onSubmit = formData => {
-		sendRequest(reqRegister, formData);
+		});
 	};
 
 	return (

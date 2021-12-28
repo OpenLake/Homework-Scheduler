@@ -24,7 +24,7 @@ const LogIn = () => {
 		watch,
 	} = useForm();
 	const router = useRouter();
-	const { isLoading, error, sendRequest, data, clearError } = useHttp();
+	const { isLoading, error, sendRequest, clearError } = useHttp();
 
 	useEffect(() => {
 		const sub = watch((value, { name }) => {
@@ -35,15 +35,11 @@ const LogIn = () => {
 		return () => sub.unsubscribe();
 	}, [watch, error, clearError]);
 
-	useEffect(() => {
-		if (!error && data) {
+	const onSubmit = formData => {
+		sendRequest(reqLogin, formData, data => {
 			authenticate(data.user);
 			router.push('/');
-		}
-	}, [error, data, router, authenticate]);
-
-	const onSubmit = formData => {
-		sendRequest(reqLogin, formData);
+		});
 	};
 
 	return (

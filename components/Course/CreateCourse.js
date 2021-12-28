@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
-import useHttp from '../../hooks/useHttp';
 import { useForm, Controller } from 'react-hook-form';
+import useHttp from '../../hooks/useHttp';
+import webRoutes from '../../helpers/webRoutes';
 
 import { reqCreateCourse } from '../../services/api/courses';
 import Button from '@mui/material/Button';
@@ -20,10 +21,12 @@ import {
 	Typography,
 } from '@mui/material';
 import LoadingSpinner from '../Utils/LoadingSpinner';
+import { useRouter } from 'next/router';
 
 export default function CreateCourse(props) {
+	const router = useRouter();
 	const [type, setCourseType] = useState('public');
-	const { isLoading, error, sendRequest, data, clearError } = useHttp();
+	const { isLoading, error, sendRequest, clearError } = useHttp();
 	const {
 		handleSubmit,
 		control,
@@ -33,7 +36,9 @@ export default function CreateCourse(props) {
 	} = useForm();
 
 	const createCourse = formData => {
-		sendRequest(reqCreateCourse, { ...formData, type });
+		sendRequest(reqCreateCourse, { ...formData, type }, data => {
+			router.push(webRoutes.course(data._id).path);
+		});
 	};
 
 	const onClose = () => {
@@ -54,12 +59,6 @@ export default function CreateCourse(props) {
 		});
 		return () => sub.unsubscribe();
 	}, [watch, error, clearError]);
-
-	useEffect(() => {
-		if (!error && data) {
-			console.log(data);
-		}
-	}, [data, error]);
 
 	return (
 		<Dialog open={props.open} onClose={onClose}>

@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-import { Card, CardContent, Typography } from '@mui/material';
+import { Card, CardContent, Typography, Icon, Stack } from '@mui/material';
 
 const CourseCard = ({ course, onClick }) => {
 	const [bgColor, setBgColor] = useState('#fafafa');
@@ -32,7 +32,15 @@ const CourseCard = ({ course, onClick }) => {
 			onClick={handleClick}
 		>
 			<CardContent>
-				<Typography variant="h5">{course.name}</Typography>
+				<Typography variant="h4">{course.name}</Typography>
+				<Stack direction="row" alignItems="center">
+					<Typography variant="h4" color="textSecondary">
+						<Icon>person</Icon>
+					</Typography>
+					<Typography variant="h5" color="textSecondary">
+						{course.creator.firstName + ' ' + course.creator.lastName}
+					</Typography>
+				</Stack>
 				<Typography variant="body2" color="textSecondary">
 					{course.code}
 				</Typography>
@@ -43,7 +51,7 @@ const CourseCard = ({ course, onClick }) => {
 						overflow: 'hidden',
 						whiteSpace: 'normal',
 						display: '-webkit-box',
-						WebkitLineClamp: '4',
+						WebkitLineClamp: '3',
 						WebkitBoxOrient: 'vertical',
 					}}
 				>

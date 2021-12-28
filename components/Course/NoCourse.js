@@ -1,12 +1,22 @@
-import { useState } from 'react';
+import { useState, useContext } from 'react';
 import { useRouter } from 'next/router';
 import { Box, Stack, Typography, Button, Icon } from '@mui/material';
 
+import authContext from '../../helpers/auth-context';
 import CreateCourse from './CreateCourse';
 
 const NoCourse = ({ title, subTitle, addBtn = true, browseBtn = true }) => {
-	const [openCreateModal, setOpenCreateModal] = useState(false);
 	const router = useRouter();
+	const [openCreateModal, setOpenCreateModal] = useState(false);
+	const { isAuthenticated } = useContext(authContext);
+
+	const onCreateCourse = () => {
+		if (!isAuthenticated) {
+			router.push('/login');
+		} else {
+			setOpenCreateModal(true);
+		}
+	};
 
 	return (
 		<Box
@@ -32,11 +42,7 @@ const NoCourse = ({ title, subTitle, addBtn = true, browseBtn = true }) => {
 
 			<Stack sx={{ pt: 2 }} direction="row" spacing={2} justifyContent="center">
 				{addBtn && (
-					<Button
-						variant="contained"
-						color="primary"
-						onClick={() => setOpenCreateModal(true)}
-					>
+					<Button variant="contained" color="primary" onClick={onCreateCourse}>
 						<Icon>add</Icon>
 						Create Course
 					</Button>

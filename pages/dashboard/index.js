@@ -41,11 +41,11 @@ const Dashboard = props => {
 export const getServerSideProps = isAuth(async (ctx, user) => {
 	const myCourses = await Course.find({
 		creator: user._id,
-	});
+	}).populate('creator');
 
 	const enrolledCourses = await Course.find({
 		_id: { $in: user.courses },
-	});
+	}).populate('creator');
 
 	return {
 		props: {
