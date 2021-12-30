@@ -1,18 +1,21 @@
-import { Fragment, useState, useEffect } from 'react';
+import { Fragment, useState, useEffect, useContext } from 'react';
 import { useRouter } from 'next/router';
 import useHttp from '../../hooks/useHttp';
 import webRoutes from '../../helpers/webRoutes';
 import { reqJoinCourse } from '../../services/api/courses';
 import Course from '../../models/Course';
 
+import AuthContext from '../../helpers/auth-context';
 import CourseList from '../../components/Course/CourseList';
 import NoCourses from '../../components/Course/NoCourse';
 import ConfirmationDialog from '../../components/Utils/ConfirmationDialog';
 import ErrorDialog from '../../components/Utils/ErrorDialog';
 import LoadingSpinner from '../../components/Utils/LoadingSpinner';
+import { Box } from '@mui/system';
 
 const Index = props => {
 	const router = useRouter();
+	const { isAuthenticated } = useContext(AuthContext);
 	const [dialogOpen, setDialogOpen] = useState(false);
 	const [course, setCourse] = useState(null);
 	const { sendRequest, error, isLoading, clearError } = useHttp();
@@ -39,6 +42,10 @@ const Index = props => {
 	};
 
 	const handleConfirm = () => {
+		if (!isAuthenticated) {
+			router.push(webRoutes.login.path);
+			return;
+		}
 		sendRequest(reqJoinCourse, course._id, () => {
 			router.push(webRoutes.course(course._id).path);
 		});
@@ -64,6 +71,7 @@ const Index = props => {
 				content={error}
 			/>
 			<CourseList title="Courses" courses={courses} onClick={onCourseClick} />
+			<Box height="10px" />
 		</Fragment>
 	);
 };
