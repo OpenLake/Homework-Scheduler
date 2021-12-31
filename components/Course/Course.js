@@ -64,7 +64,7 @@ const EnrolledButton = props => {
 	};
 
 	return (
-		<Box>
+		<Box mr={1}>
 			<Button
 				onClick={handleClick}
 				endIcon={<Icon>{props.enrolled ? 'check' : 'add'}</Icon>}
@@ -91,8 +91,10 @@ const InviteButton = ({ courseId }) => {
 	const [open, setOpen] = useState(false);
 
 	return (
-		<Box>
-			<Button onClick={() => setOpen(true)}>Invite</Button>
+		<Box mr={1}>
+			<Button onClick={() => setOpen(true)}>
+				Invite <Icon>add</Icon>
+			</Button>
 			<Invite open={open} close={() => setOpen(false)} courseId={courseId} />
 		</Box>
 	);
@@ -130,10 +132,10 @@ const Course = ({ course }) => {
 	const teacher = course.creator._id === user?._id;
 
 	return (
-		<Container>
+		<Box sx={{ width: '100%' }}>
 			<Stack direction="row" justifyContent="space-between" alignItems="center">
 				<BackButton />
-				<Tabs value={activeTab} onChange={handleChange} centered>
+				<Tabs value={activeTab} onChange={handleChange}>
 					<Tab label="Assignments" icon={<Icon>assignment</Icon>} />
 					<Tab label="People" icon={<Icon>people</Icon>} />
 					<Tab label="Announcements" icon={<Icon>announcement</Icon>} />
@@ -165,7 +167,7 @@ const Course = ({ course }) => {
 				/>
 			)}
 			<Box height="20px" />
-		</Container>
+		</Box>
 	);
 };
 

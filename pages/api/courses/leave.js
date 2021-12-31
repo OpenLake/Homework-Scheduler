@@ -25,6 +25,7 @@ const handler = async (req, res) => {
 	req.user.courses = req.user.courses.filter(
 		c => c.toString() !== course._id.toString(),
 	);
+
 	await req.user.save();
 
 	res.status(200).json(course);
