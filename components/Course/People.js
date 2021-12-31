@@ -1,4 +1,4 @@
-import { useContext } from 'react';
+import { useContext, useState } from 'react';
 import {
 	Stack,
 	Typography,
@@ -6,26 +6,21 @@ import {
 	ListItem,
 	Divider,
 	Avatar,
-	Icon,
-	Button,
 } from '@mui/material';
 
 import authContext from '../../helpers/auth-context';
 
-const People = ({ teachers, students }) => {
+const People = ({ teachers, students, courseId }) => {
 	const { user } = useContext(authContext);
 
 	const isTeacher = teachers.find(teacher => teacher._id === user._id);
 
 	return (
-		<Stack mt={5}>
-			<Stack direction="row" alignItems="center" justifyContent="space-between">
-				<Typography variant="h4">Teachers</Typography>
-				{isTeacher && (
-					<Button>
-						<Icon>person_add</Icon>
-					</Button>
-				)}
+		<Stack mt={2}>
+			<Stack direction="row" alignItems="center" justifyContent="spac-between">
+				<Typography variant="h6" fontWeight={2}>
+					TEACHERS
+				</Typography>
 			</Stack>
 			<Divider />
 			<List>
@@ -39,12 +34,9 @@ const People = ({ teachers, students }) => {
 				))}
 			</List>
 			<Stack direction="row" alignItems="center" justifyContent="space-between">
-				<Typography variant="h4">Students</Typography>
-				{isTeacher && (
-					<Button>
-						<Icon>person_add</Icon>
-					</Button>
-				)}
+				<Typography variant="h6" fontWeight={2}>
+					STUDENTS
+				</Typography>
 			</Stack>
 			<Divider />
 			<List>
@@ -57,11 +49,11 @@ const People = ({ teachers, students }) => {
 					</ListItem>
 				))}
 				{students.length === 0 && (
-					<ListItem>
-						<Typography variant="body1" ml={1} textAlign="center">
-							No students yet invite them to join the course
-						</Typography>
-					</ListItem>
+					<Typography variant="h5" mt={2} textAlign="center">
+						{isTeacher
+							? 'No students yet invite them to your course'
+							: 'No Students Enrolled Yet'}
+					</Typography>
 				)}
 			</List>
 		</Stack>

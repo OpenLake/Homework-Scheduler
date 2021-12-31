@@ -6,7 +6,7 @@ import Divider from '@mui/material/Divider';
 const CourseList = ({ title, courses, onClick }) => {
 	return (
 		<Container sx={{ my: 5 }}>
-			<Typography variant="h3" gutterBottom>
+			<Typography variant="h5" gutterBottom>
 				{title}
 				<Divider />
 			</Typography>

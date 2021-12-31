@@ -22,4 +22,4 @@ const submissionSchema = mongoose.Schema({
 });
 
 module.exports =
-	mongoose.models.Submission || mongoose.model('Submission', submissionSchema);
+	mongoose.models?.Submission || mongoose.model('Submission', submissionSchema);

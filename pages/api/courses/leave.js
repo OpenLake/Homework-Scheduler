@@ -8,7 +8,6 @@ const handler = async (req, res) => {
 
 	const { courseId } = req.body;
 
-	console.log(courseId);
 	const course = await Course.findById(courseId);
 
 	if (!course) {
@@ -16,14 +15,16 @@ const handler = async (req, res) => {
 	}
 
 	if (req.user._id.toString() === course.creator.toString()) {
-		throw new CustomError('You can not join your own course', 400);
+		throw new CustomError('You can not leave your own course', 400);
 	}
 
-	if (req.user.courses.includes(course._id)) {
-		throw new CustomError('You are already enrolled in this course', 400);
+	if (!req.user.courses.includes(course._id)) {
+		throw new CustomError('You are not enrolled in this course', 400);
 	}
 
-	req.user.courses.push(course._id);
+	req.user.courses = req.user.courses.filter(
+		c => c.toString() !== course._id.toString(),
+	);
 	await req.user.save();
 
 	res.status(200).json(course);

@@ -32,12 +32,12 @@ const CourseCard = ({ course, onClick }) => {
 			onClick={handleClick}
 		>
 			<CardContent>
-				<Typography variant="h4">{course.name}</Typography>
+				<Typography variant="h6">{course.name}</Typography>
 				<Stack direction="row" alignItems="center">
 					<Typography variant="h4" color="textSecondary">
 						<Icon>person</Icon>
 					</Typography>
-					<Typography variant="h5" color="textSecondary">
+					<Typography variant="h6" color="textSecondary">
 						{course.creator.firstName + ' ' + course.creator.lastName}
 					</Typography>
 				</Stack>

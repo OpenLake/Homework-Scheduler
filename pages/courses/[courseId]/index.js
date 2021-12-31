@@ -34,36 +34,23 @@ export const getServerSideProps = isAuth(async (ctx, user) => {
 		};
 	}
 
-	if (
-		course.creator._id.toString() === user._id.toString() ||
-		user.courses.includes(course._id)
-	) {
-		const students = await User.find(
-			{
-				courses: { $in: [course._id] },
-			},
-			{ _id: 1, firstName: 1, lastName: 1 },
-		);
+	const students = await User.find(
+		{
+			courses: { $in: [course._id] },
+		},
+		{ _id: 1, firstName: 1, lastName: 1 },
+	);
 
-		const courseJson = JSON.stringify({
-			...course._doc,
-			students,
-		});
+	const courseJson = JSON.stringify({
+		...course._doc,
+		students,
+	});
 
-		return {
-			props: {
-				course: courseJson,
-			},
-		};
-	} else {
-		ctx.res.statusCode = 403;
-		return {
-			props: {
-				error: 'You are not authorized to view this course',
-				statusCode: 403,
-			},
-		};
-	}
+	return {
+		props: {
+			course: courseJson,
+		},
+	};
 }, webRoutes.course(''));
 
 export default Index;

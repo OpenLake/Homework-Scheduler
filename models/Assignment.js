@@ -29,13 +29,7 @@ const assignmentSchema = mongoose.Schema({
 			ref: 'User',
 		},
 	],
-	submissions: [
-		{
-			type: ObjectId,
-			ref: 'Submission',
-		},
-	],
 });
 
 module.exports =
-	mongoose.models.Assignment || mongoose.model('Assignment', assignmentSchema);
+	mongoose.models?.Assignment || mongoose.model('Assignment', assignmentSchema);

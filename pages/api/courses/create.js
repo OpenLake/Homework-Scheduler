@@ -5,7 +5,7 @@ import isAuth from '../../../middlewares/api/isAuth';
 const handler = async (req, res) => {
 	await isAuth(req, res);
 	const { name, code, type, description } = req.body;
-
+	
 	const course = await Course.create({
 		name,
 		code,
