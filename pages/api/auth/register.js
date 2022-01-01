@@ -18,6 +18,7 @@ const handler = async (req, res) => {
 		});
 		cookies.set('auth', token, {
 			httpOnly: true,
+			secure: process.env.NODE_ENV === 'production',
 			maxAge: 1000 * 60 * 60 * 24 * 2,
 		});
 
