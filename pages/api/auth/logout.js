@@ -1,4 +1,5 @@
 import Cookies from 'cookies';
+import catchErrors from '../../../helpers/api/catchErrors';
 
 const handler = (req, res) => {
 	if (req.method === 'POST') {
@@ -14,4 +15,4 @@ const handler = (req, res) => {
 	}
 };
 
-export default handler;
+export default catchErrors(handler);
