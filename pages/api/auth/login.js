@@ -19,10 +19,9 @@ const handler = async (req, res) => {
 
 		const token = user.generateAuthToken();
 
-		const cookies = new Cookies(req, res);
+		const cookies = new Cookies(req, res, { secure: process.env.NODE_ENV === 'production' });
 		cookies.set('auth', token, {
 			httpOnly: true,
-			secure: process.env.NODE_ENV === 'production',
 			maxAge: 1000 * 60 * 60 * 24 * 2,
 		});
 		res.status(201).json({ user, token });
