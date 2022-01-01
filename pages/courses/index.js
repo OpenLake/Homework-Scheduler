@@ -1,3 +1,4 @@
+import { dbConnect } from '../../lib/db';
 import { Fragment } from 'react';
 import { useRouter } from 'next/router';
 import webRoutes from '../../helpers/webRoutes';
@@ -38,6 +39,8 @@ const Index = props => {
 };
 
 export const getServerSideProps = async ctx => {
+	await dbConnect();
+
 	const courses = await Course.find({
 		type: 'public',
 	}).populate('creator');

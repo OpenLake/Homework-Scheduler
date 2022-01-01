@@ -1,9 +1,11 @@
+import { dbConnect } from '../../../lib/db';
 import catchErrors from '../../../helpers/api/catchErrors';
 import CustomError from '../../../helpers/api/CustomError';
 import Course from '../../../models/Course';
 import isAuth from '../../../middlewares/api/isAuth';
 
 const handler = async (req, res) => {
+	await dbConnect();
 	await isAuth(req, res);
 
 	const { courseId } = req.body;

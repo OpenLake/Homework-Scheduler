@@ -2,8 +2,11 @@ import Cookies from 'cookies';
 import User from '../../../models/User';
 import CustomError from '../../../helpers/api/CustomError';
 import catchErrors from '../../../helpers/api/catchErrors';
+import { dbConnect } from '../../../lib/db';
 
 const handler = async (req, res) => {
+	await dbConnect();
+
 	if (req.method === 'POST') {
 		const user = await User.findOne({ email: req.body.email });
 
@@ -19,7 +22,9 @@ const handler = async (req, res) => {
 
 		const token = user.generateAuthToken();
 
-		const cookies = new Cookies(req, res, { secure: process.env.NODE_ENV === 'production' });
+		const cookies = new Cookies(req, res, {
+			secure: process.env.NODE_ENV === 'production',
+		});
 		cookies.set('auth', token, {
 			httpOnly: true,
 			maxAge: 1000 * 60 * 60 * 24 * 2,
