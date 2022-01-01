@@ -1,7 +1,9 @@
+import { dbConnect } from '../lib/db';
 import User from '../models/User';
 
 const isAuth = (getServerSidePropsFunction, webRoute) => {
 	return async ctx => {
+		await dbConnect();
 		const { req } = ctx;
 		const token = req.cookies?.auth || null;
 
