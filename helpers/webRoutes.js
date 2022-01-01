@@ -47,6 +47,12 @@ const webRoutes = {
 		path: `/courses/${id}`,
 		redirect: '/login',
 	}),
+	newAssignment: id => ({
+		beforeAuth: false,
+		afterAuth: true,
+		path: `/courses/${id}/assignments/new`,
+		redirect: '/login',
+	}),
 };
 
 export default webRoutes;

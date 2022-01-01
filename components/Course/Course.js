@@ -5,7 +5,6 @@ import useHttp from '../../hooks/useHttp';
 import { reqJoinCourse, reqLeaveCourse } from '../../services/api/courses';
 
 import {
-	Container,
 	Tabs,
 	Tab,
 	Icon,
@@ -17,24 +16,12 @@ import {
 } from '@mui/material';
 
 import AuthContext from '../../helpers/auth-context';
+import Assignments from '../Assignment/AssignmentList';
 import People from './People';
 import LoadingSpinner from '../Utils/LoadingSpinner';
 import Invite from './Invite';
 import ConfirmationDialog from '../Utils/ConfirmationDialog';
-
-const BackButton = () => {
-	const router = useRouter();
-
-	const goBack = () => {
-		router.back();
-	};
-
-	return (
-		<Button onClick={goBack}>
-			<Icon>arrow_back</Icon>
-		</Button>
-	);
-};
+import BackButton from '../Utils/BackButton';
 
 const EnrolledButton = props => {
 	const { isAuthenticated } = useContext(AuthContext);
@@ -159,6 +146,9 @@ const Course = ({ course }) => {
 					{course.code}
 				</Typography>
 			</Stack>
+			{activeTab === 0 && (
+				<Assignments courseId={course._id} isTeacher={teacher} />
+			)}
 			{activeTab === 1 && (
 				<People
 					students={students}
