@@ -117,7 +117,11 @@ const NewForm = ({ courseId }) => {
 							)}
 						</Grid>
 						<Grid item xs={12}>
-							<TextEditor state={editorState} onChange={setEditorState} />
+							<TextEditor
+								state={editorState}
+								onChange={setEditorState}
+								title="Decription/Instructions"
+							/>
 						</Grid>
 					</Grid>
 					<Button

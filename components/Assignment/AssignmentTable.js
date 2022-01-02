@@ -42,13 +42,13 @@ const AssignmentTableHeader = ({
 	return (
 		<TableHead>
 			<TableRow>
-				<TableCell padding="none" />
-				<TableCell align="left" padding="default">
+				<TableCell padding="checkbox" />
+				<TableCell align="left" padding="none">
 					S.No
 				</TableCell>
 				<TableCell
 					align="left"
-					padding="default"
+					padding="none"
 					sortDirection={orderBy === 'title' ? order : false}
 				>
 					<Tooltip title="Sort" enterDelay={300}>
@@ -63,7 +63,7 @@ const AssignmentTableHeader = ({
 				</TableCell>
 				<TableCell
 					align="left"
-					padding="default"
+					padding="none"
 					sortDirection={orderBy === 'dueDate' ? order : false}
 				>
 					<Tooltip title="Sort" enterDelay={300}>
@@ -77,12 +77,12 @@ const AssignmentTableHeader = ({
 					</Tooltip>
 				</TableCell>
 				{!isTeacher && (
-					<TableCell align="left" padding="default">
+					<TableCell align="left" padding="none">
 						Status
 					</TableCell>
 				)}
 				{isTeacher && (
-					<TableCell align="left" padding="default">
+					<TableCell align="left" padding="none">
 						Submissions
 					</TableCell>
 				)}

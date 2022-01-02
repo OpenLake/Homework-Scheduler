@@ -42,28 +42,28 @@ const AssignmentEntry = props => {
 	return (
 		<Fragment key={assignment._id}>
 			<TableRow>
-				<TableCell>
+				<TableCell padding="normal">
 					<IconButton onClick={() => setOpen(!open)} size="small">
 						<Tooltip title="Show Details">
 							<Icon>{open ? 'expand_less' : 'expand_more'}</Icon>
 						</Tooltip>
 					</IconButton>
 				</TableCell>
-				<TableCell align="left" padding="default">
+				<TableCell align="left" padding="none">
 					<Tooltip title="S.No">
 						<Typography variant="body2" component="span">
 							{props.index + 1}
 						</Typography>
 					</Tooltip>
 				</TableCell>
-				<TableCell align="left" padding="default">
+				<TableCell align="left" padding="none">
 					<Tooltip title="Title">
 						<Typography variant="body2" component="span" noWrap>
 							{assignment.title}
 						</Typography>
 					</Tooltip>
 				</TableCell>
-				<TableCell align="left" padding="default">
+				<TableCell align="left" padding="none">
 					<Tooltip title={calculateDaysLeft(assignment.dueDate)} arrow>
 						<Typography variant="body2" component="span">
 							{formatDate(assignment.dueDate)}
@@ -71,7 +71,7 @@ const AssignmentEntry = props => {
 					</Tooltip>
 				</TableCell>
 				{!props.isTeacher && (
-					<TableCell align="left" padding="default">
+					<TableCell align="left" padding="none">
 						<Tooltip title={assignment.status ? 'Completed' : 'Pending'} arrow>
 							<Avatar
 								sx={{
@@ -86,7 +86,7 @@ const AssignmentEntry = props => {
 					</TableCell>
 				)}
 				{props.isTeacher && (
-					<TableCell align="left" padding="default">
+					<TableCell align="left" padding="none">
 						<Typography variant="body2" component="span">
 							{assignment.submissions || 5}/{assignment.maxSubmissions || 10}
 						</Typography>
