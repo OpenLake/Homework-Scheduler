@@ -16,7 +16,7 @@ import {
 } from '@mui/material';
 
 import AuthContext from '../../helpers/auth-context';
-import Assignments from '../Assignment/AssignmentList';
+import Assignments from '../Assignment/Assignments';
 import People from './People';
 import LoadingSpinner from '../Utils/LoadingSpinner';
 import Invite from './Invite';

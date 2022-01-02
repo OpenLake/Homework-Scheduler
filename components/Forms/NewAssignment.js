@@ -1,11 +1,14 @@
 import React from 'react';
 import dynamic from 'next/dynamic';
+import useHttp from '../../hooks/useHttp';
 import { EditorState } from 'draft-js';
 import { stateToHTML } from 'draft-js-export-html';
 
 import { useState } from 'react';
 import { useForm, Controller } from 'react-hook-form';
+import { useRouter } from 'next/router';
 
+import { reqCreateAssignment } from '../../services/api/assignments';
 import Button from '@mui/material/Button';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
@@ -13,12 +16,14 @@ import Typography from '@mui/material/Typography';
 import TextField from '@mui/material/TextField';
 import Container from '@mui/material/Container';
 import { Icon } from '@mui/material';
+import LoadingSpinner from '../Utils/LoadingSpinner';
 
 const TextEditor = dynamic(() => import('../Utils/TextEditor'), { ssr: false });
 
-const NewForm = () => {
+const NewForm = ({ courseId }) => {
+	const router = useRouter();
 	const [editorState, setEditorState] = useState(EditorState.createEmpty());
-	const [htmlContent, setHtmlContent] = useState('');
+	const { isLoading, sendRequest } = useHttp();
 
 	const {
 		handleSubmit,
@@ -29,19 +34,22 @@ const NewForm = () => {
 	const onSubmit = formData => {
 		const html = stateToHTML(editorState.getCurrentContent());
 
-		setHtmlContent(html);
-
 		if (html === '<p><br></p>' || html === '<p></p>') {
 			alert('Please enter a description');
 			return;
 		}
 
 		formData.description = html;
-		console.log(formData);
+		formData.courseId = courseId;
+
+		sendRequest(reqCreateAssignment, formData, () => {
+			router.push(`/courses/${courseId}`);
+		});
 	};
 
 	return (
 		<Container component="main" maxWidth="md">
+			<LoadingSpinner isLoading={isLoading} />
 			<Box
 				sx={{
 					marginTop: 2,
@@ -85,7 +93,7 @@ const NewForm = () => {
 						</Grid>
 						<Grid item md={6} xs={12}>
 							<Controller
-								name="date"
+								name="dueDate"
 								control={control}
 								rules={{
 									required: 'Due Date is Required',
@@ -110,9 +118,6 @@ const NewForm = () => {
 						</Grid>
 						<Grid item xs={12}>
 							<TextEditor state={editorState} onChange={setEditorState} />
-							<Box>
-								<div dangerouslySetInnerHTML={{ __html: htmlContent }} />
-							</Box>
 						</Grid>
 					</Grid>
 					<Button

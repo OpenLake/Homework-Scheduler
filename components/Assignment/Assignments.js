@@ -10,7 +10,7 @@ import {
 	Icon,
 } from '@mui/material';
 
-import AssignmentItem from './AssignmentItem';
+import AssignmentTable from './AssignmentTable';
 import LoadingSpinner from '../Utils/LoadingSpinner';
 
 const Assignments = ({ isTeacher, courseId }) => {
@@ -38,16 +38,23 @@ const Assignments = ({ isTeacher, courseId }) => {
 					)}
 				</Box>
 			)}
-			{!isLoading && assignments.length > 0 && (
-				<List>
-					{assignments.map(assignment => (
-						<ListItemButton key={assignment._id}>
-							<AssignmentItem assignment={assignment} />
-						</ListItemButton>
-					))}
-				</List>
+			{!isLoading && assignments.length !== 0 && (
+				<Box>
+					{isTeacher && (
+						<Link passHref href={`/courses/${courseId}/assignments/new`}>
+							<Button variant="contained" color="warning">
+								Create <Icon>add</Icon>
+							</Button>
+						</Link>
+					)}
+					<AssignmentTable
+						assignments={assignments}
+						isTeacher={isTeacher}
+						courseId={courseId}
+					/>
+				</Box>
 			)}
-			<Box mb="20px" />
+			<Box mb="60px" />
 		</Box>
 	);
 };
