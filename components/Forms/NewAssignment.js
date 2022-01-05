@@ -43,7 +43,7 @@ const NewForm = ({ courseId }) => {
 		formData.courseId = courseId;
 
 		sendRequest(reqCreateAssignment, formData, () => {
-			router.push(`/courses/${courseId}`);
+			router.push(`/courses/${courseId}/assignments`);
 		});
 	};
 

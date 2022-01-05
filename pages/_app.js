@@ -7,6 +7,8 @@ import Footer from '../components/Layout/Footer';
 import AuthContextProvider from '../components/Utils/AuthContextProvider';
 
 function MyApp({ Component, pageProps }) {
+	const Layout = Component.Layout || Fragment;
+
 	return (
 		<Fragment>
 			<Head>
@@ -14,7 +16,9 @@ function MyApp({ Component, pageProps }) {
 			</Head>
 			<AuthContextProvider>
 				<Header />
-				<Component {...pageProps} />
+				<Layout>
+					<Component {...pageProps} />
+				</Layout>
 				<Footer />
 			</AuthContextProvider>
 		</Fragment>
