@@ -51,7 +51,12 @@ const People = ({ courseId, isTeacher }) => {
 					</ListItem>
 				))}
 			</List>
-			<Stack direction="row" alignItems="center" justifyContent="space-between">
+			<Stack
+				direction="row"
+				alignItems="center"
+				justifyContent="space-between"
+				mt={3}
+			>
 				<Typography variant="h6" fontWeight={2}>
 					STUDENTS
 				</Typography>

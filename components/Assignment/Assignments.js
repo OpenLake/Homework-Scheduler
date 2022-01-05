@@ -13,7 +13,7 @@ import {
 import AssignmentTable from './AssignmentTable';
 import LoadingSpinner from '../Utils/LoadingSpinner';
 
-const Assignments = ({ isTeacher, courseId }) => {
+const Assignments = ({ isTeacher, courseId, isEnrolled }) => {
 	const { assignments, isLoading } = useAssignments(courseId);
 
 	return (
@@ -50,6 +50,7 @@ const Assignments = ({ isTeacher, courseId }) => {
 					<AssignmentTable
 						assignments={assignments}
 						isTeacher={isTeacher}
+						isEnrolled={isEnrolled}
 						courseId={courseId}
 					/>
 				</Box>

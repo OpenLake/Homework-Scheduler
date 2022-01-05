@@ -39,11 +39,11 @@ const EnrolledButton = props => {
 		setOpen(false);
 		if (props.isEnrolled) {
 			sendRequest(reqLeaveCourse, props.courseId, () => {
-				router.reload();
+				props.onEnrollOrUnenroll();
 			});
 		} else {
 			sendRequest(reqJoinCourse, props.courseId, () => {
-				router.reload();
+				props.onEnrollOrUnenroll();
 			});
 		}
 	};
@@ -123,6 +123,14 @@ const CourseLayout = ({ children }) => {
 		});
 	}, [sendRequest, courseId]);
 
+	const onEnrollOrUnenroll = () => {
+		sendRequest(getCourseById, courseId, data => {
+			setCourse(data.course);
+			setIsTeacher(data.isTeacher);
+			setIsEnrolled(data.isEnrolled);
+		});
+	};
+
 	const handleChange = (_, tab) => {
 		setValue(tab);
 
@@ -161,7 +169,11 @@ const CourseLayout = ({ children }) => {
 						<Tab label="Announcements" icon={<Icon>announcement</Icon>} />
 					</Tabs>
 					{!isTeacher && (
-						<EnrolledButton courseId={course?._id} isEnrolled={isEnrolled} />
+						<EnrolledButton
+							courseId={course?._id}
+							isEnrolled={isEnrolled}
+							onEnrollOrUnenroll={onEnrollOrUnenroll}
+						/>
 					)}
 					{isTeacher && <InviteButton courseId={course?._id} />}
 				</Stack>

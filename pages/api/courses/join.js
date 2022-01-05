@@ -10,7 +10,6 @@ const handler = async (req, res) => {
 
 	const { courseId } = req.body;
 
-	console.log(courseId);
 	const course = await Course.findById(courseId);
 
 	if (!course) {

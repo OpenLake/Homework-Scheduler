@@ -37,7 +37,10 @@ const AssignmentTableHeader = ({
 	orderBy,
 	onRequestSort,
 	isTeacher,
+	isEnrolled,
 }) => {
+	const auth = isEnrolled !== 'unauthenticated';
+
 	return (
 		<TableHead>
 			<TableRow>
@@ -57,7 +60,7 @@ const AssignmentTableHeader = ({
 					</Tooltip>
 				</TableCell>
 				<TableCell
-					align="left"
+					align={!auth || !isEnrolled ? 'center' : 'left'}
 					padding="normal"
 					sortDirection={orderBy === 'dueDate' ? order : false}
 				>
@@ -71,14 +74,20 @@ const AssignmentTableHeader = ({
 						</TableSortLabel>
 					</Tooltip>
 				</TableCell>
-				{!isTeacher && (
+				{!isTeacher && auth && isEnrolled && (
 					<TableCell align="left" padding="normal">
 						Status
 					</TableCell>
 				)}
-				{isTeacher && (
-					<TableCell align="left" padding="normal">
-						Submissions
+				{isTeacher && auth && (
+					<TableCell align="center" padding="normal">
+						<TableSortLabel
+							active={orderBy === 'submissions'}
+							direction={orderBy === 'submissions' ? order : 'asc'}
+							onClick={event => onRequestSort('submissions', event)}
+						>
+							Submissions
+						</TableSortLabel>
 					</TableCell>
 				)}
 			</TableRow>
@@ -115,6 +124,7 @@ const AssignmentTable = props => {
 						orderBy={orderBy}
 						onRequestSort={onRequestSort}
 						isTeacher={props.isTeacher}
+						isEnrolled={props.isEnrolled}
 					/>
 					<TableBody>
 						{props.assignments
@@ -125,6 +135,7 @@ const AssignmentTable = props => {
 									key={assignment._id}
 									assignment={assignment}
 									isTeacher={props.isTeacher}
+									isEnrolled={props.isEnrolled}
 									courseId={props.courseId}
 								/>
 							))}

@@ -9,7 +9,7 @@ const Index = () => {
 		router.push(`/courses/${router.query.courseId}/assignments`);
 	}, [router]);
 
-	return <div>Index Page</div>;
+	return <div></div>;
 };
 
 Index.Layout = CourseLayout;

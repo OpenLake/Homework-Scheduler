@@ -1,3 +1,4 @@
+import { useRouter } from 'next/router';
 import {
 	TableRow,
 	Tooltip,
@@ -6,20 +7,20 @@ import {
 	Icon,
 	Avatar,
 } from '@mui/material';
-import { red, green } from '@mui/material/colors';
+import { red, green, yellow } from '@mui/material/colors';
 
 const formatDate = date => {
 	const d = new Date(date);
 	return `${d.getDate()}/${d.getMonth() + 1}/${d.getFullYear()}`;
 };
 
-const calculateDaysLeft = dueDate => {
+const calculateDaysLeft = (dueDate, status) => {
 	const d = new Date(dueDate);
 	const now = new Date();
 	const diff = d.getTime() - now.getTime();
 	const daysLeft = Math.ceil(diff / (1000 * 3600 * 24));
 	if (daysLeft < 0) {
-		return 'Missed';
+		return status ? 'Completed' : 'Overdue';
 	} else if (daysLeft === 0) {
 		return 'Due Today';
 	} else if (daysLeft === 1) {
@@ -29,27 +30,41 @@ const calculateDaysLeft = dueDate => {
 };
 
 const AssignmentEntry = props => {
+	const router = useRouter();
 	const { assignment } = props;
+	const auth = props.isEnrolled !== 'unauthenticated';
+
+	const handleClick = () => {
+		router.push(`${router.asPath}/${assignment._id}`);
+	};
 
 	return (
-		<TableRow>
+		<TableRow hover sx={{ cursor: 'pointer' }} onClick={handleClick}>
 			<TableCell align="left" padding="normal">
-				<Tooltip title="Title">
-					<Typography variant="body2" component="span" noWrap>
-						{assignment.title}
-					</Typography>
-				</Tooltip>
+				<Typography variant="body2" component="span" noWrap>
+					{assignment.title}
+				</Typography>
 			</TableCell>
-			<TableCell align="left" padding="normal">
-				<Tooltip title={calculateDaysLeft(assignment.dueDate)} arrow>
-					<Typography variant="body2" component="span">
-						{formatDate(assignment.dueDate)}
+			<TableCell
+				align={!auth || !props.isEnrolled ? 'center' : 'left'}
+				padding="normal"
+			>
+				<Typography variant="body2">
+					{formatDate(assignment.dueDate)}
+				</Typography>
+				{auth && props.isEnrolled && (
+					<Typography variant="body3" color="textSecondary">
+						{calculateDaysLeft(assignment.dueDate, assignment.status)}
 					</Typography>
-				</Tooltip>
+				)}
 			</TableCell>
-			{!props.isTeacher && (
+			{!props.isTeacher && auth && props.isEnrolled && (
 				<TableCell align="left" padding="normal">
-					<Tooltip title={assignment.status ? 'Completed' : 'Pending'} arrow>
+					<Tooltip
+						title={assignment.status ? 'Completed' : 'Pending'}
+						arrow
+						placement="left"
+					>
 						<Avatar
 							sx={{
 								bgcolor: assignment.status ? green[400] : red[300],
@@ -62,10 +77,10 @@ const AssignmentEntry = props => {
 					</Tooltip>
 				</TableCell>
 			)}
-			{props.isTeacher && (
-				<TableCell align="left" padding="normal">
+			{props.isTeacher && auth && (
+				<TableCell align="center" padding="normal">
 					<Typography variant="body2" component="span">
-						{assignment.submissions || 5}/{assignment.maxSubmissions || 10}
+						{assignment.submissions}
 					</Typography>
 				</TableCell>
 			)}

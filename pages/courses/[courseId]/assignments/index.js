@@ -3,8 +3,14 @@ import { useCourse } from '../../../../layouts/CourseLayout';
 import Assignments from '../../../../components/Assignment/Assignments';
 
 const Index = () => {
-	const { courseId, isTeacher } = useCourse();
-	return <Assignments courseId={courseId} isTeacher={isTeacher} />;
+	const { courseId, isTeacher, isEnrolled } = useCourse();
+	return (
+		<Assignments
+			courseId={courseId}
+			isTeacher={isTeacher}
+			isEnrolled={isEnrolled}
+		/>
+	);
 };
 
 Index.Layout = CourseLayout;
