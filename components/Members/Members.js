@@ -1,4 +1,7 @@
-import { useContext, useState } from 'react';
+import { useState, useEffect } from 'react';
+import { getCourseMembers } from '../../services/api/courses';
+import useHttp from '../../hooks/useHttp';
+
 import {
 	Stack,
 	Typography,
@@ -8,13 +11,26 @@ import {
 	Avatar,
 	Chip,
 } from '@mui/material';
+import LoadingSpinner from '../Utils/LoadingSpinner';
 
-import authContext from '../../helpers/auth-context';
+const People = ({ courseId, isTeacher }) => {
+	const [students, setStudents] = useState([]);
+	const [teachers, setTeachers] = useState([]);
+	const { isLoading, sendRequest } = useHttp();
 
-const People = ({ teachers, students }) => {
-	const { user } = useContext(authContext);
+	useEffect(() => {
+		if (!courseId) {
+			return;
+		}
+		sendRequest(getCourseMembers, courseId, data => {
+			setStudents(data.students);
+			setTeachers(data.teachers);
+		});
+	}, [sendRequest, courseId]);
 
-	const isTeacher = teachers.find(teacher => teacher._id === user?._id);
+	if (isLoading) {
+		return <LoadingSpinner isLoading={isLoading} />;
+	}
 
 	return (
 		<Stack mt={2} px={5}>

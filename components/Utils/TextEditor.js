@@ -13,7 +13,7 @@ const editorStyle = {
 	padding: '0 1rem',
 };
 
-const TextEditor = ({ onChange, state }) => {
+const TextEditor = ({ onChange, state, title }) => {
 	const onEditorStateChange = editorState => {
 		onChange(editorState);
 	};
@@ -21,7 +21,7 @@ const TextEditor = ({ onChange, state }) => {
 	return (
 		<Fragment>
 			<Typography variant="body1" fontWeight="bold">
-				Description/Instructions
+				{title}
 			</Typography>
 			<Editor
 				editorState={state}

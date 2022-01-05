@@ -1,3 +1,5 @@
+import CustomError from '../../helpers/api/CustomError';
+
 export const fetchAssignmentsById = async courseId => {
 	const response = await fetch(`/api/courses/${courseId}/assignments`);
 	const data = await response.json();

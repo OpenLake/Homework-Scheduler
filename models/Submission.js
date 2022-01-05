@@ -9,11 +9,15 @@ const submissionSchema = mongoose.Schema({
 	},
 	createdAt: {
 		type: Date,
-		required: true,
+		default: Date.now(),
 	},
 	assignment: {
 		type: ObjectId,
 		ref: 'Assignment',
+	},
+	course: {
+		type: ObjectId,
+		ref: 'Course',
 	},
 	submittedBy: {
 		type: ObjectId,

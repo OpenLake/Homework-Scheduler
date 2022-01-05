@@ -6,7 +6,6 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import TableSortLabel from '@mui/material/TableSortLabel';
-import TablePagination from '@mui/material/TablePagination';
 import Typography from '@mui/material/Typography';
 import Paper from '@mui/material/Paper';
 import Tooltip from '@mui/material/Tooltip';
@@ -42,13 +41,9 @@ const AssignmentTableHeader = ({
 	return (
 		<TableHead>
 			<TableRow>
-				<TableCell padding="none" />
-				<TableCell align="left" padding="default">
-					S.No
-				</TableCell>
 				<TableCell
 					align="left"
-					padding="default"
+					padding="normal"
 					sortDirection={orderBy === 'title' ? order : false}
 				>
 					<Tooltip title="Sort" enterDelay={300}>
@@ -63,7 +58,7 @@ const AssignmentTableHeader = ({
 				</TableCell>
 				<TableCell
 					align="left"
-					padding="default"
+					padding="normal"
 					sortDirection={orderBy === 'dueDate' ? order : false}
 				>
 					<Tooltip title="Sort" enterDelay={300}>
@@ -77,12 +72,12 @@ const AssignmentTableHeader = ({
 					</Tooltip>
 				</TableCell>
 				{!isTeacher && (
-					<TableCell align="left" padding="default">
+					<TableCell align="left" padding="normal">
 						Status
 					</TableCell>
 				)}
 				{isTeacher && (
-					<TableCell align="left" padding="default">
+					<TableCell align="left" padding="normal">
 						Submissions
 					</TableCell>
 				)}
@@ -93,9 +88,7 @@ const AssignmentTableHeader = ({
 
 const AssignmentTable = props => {
 	const [order, setOrder] = useState('asc');
-	const [orderBy, setOrderBy] = useState('title');
-	const [page, setPage] = useState(0);
-	const [rowsPerPage, setRowsPerPage] = useState(5);
+	const [orderBy, setOrderBy] = useState('dueDate');
 
 	const onRequestSort = (property, event) => {
 		const isAsc = orderBy === property && order === 'asc';
@@ -103,23 +96,9 @@ const AssignmentTable = props => {
 		setOrderBy(property);
 	};
 
-	const handleChangePage = (event, newPage) => {
-		setPage(newPage);
-	};
-
-	const handleChangeRowsPerPage = event => {
-		setRowsPerPage(parseInt(event.target.value, 10));
-		setPage(0);
-	};
-
-	const emptyRows =
-		page > 0
-			? Math.max(0, (1 + page) * rowsPerPage - props.assignments.length)
-			: 0;
-
 	return (
 		<Paper>
-			<TableContainer component={Paper} width="80%" sx={{ mt: 2 }}>
+			<TableContainer component={Paper} sx={{ mt: 2 }}>
 				<Toolbar
 					sx={{
 						pl: { sm: 2 },
@@ -141,37 +120,17 @@ const AssignmentTable = props => {
 						{props.assignments
 							.slice()
 							.sort(getComparator(order, orderBy))
-							.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-							.map((assignment, index) => (
+							.map(assignment => (
 								<AssignmentEntry
 									key={assignment._id}
 									assignment={assignment}
 									isTeacher={props.isTeacher}
-									index={index}
 									courseId={props.courseId}
 								/>
 							))}
-						{emptyRows > 0 && (
-							<TableRow
-								style={{
-									height: 53 * emptyRows,
-								}}
-							>
-								<TableCell colSpan={6} />
-							</TableRow>
-						)}
 					</TableBody>
 				</Table>
 			</TableContainer>
-			<TablePagination
-				rowsPerPageOptions={[5, 10, 25]}
-				component="div"
-				count={props.assignments.length}
-				rowsPerPage={rowsPerPage}
-				page={page}
-				onPageChange={handleChangePage}
-				onRowsPerPageChange={handleChangeRowsPerPage}
-			/>
 		</Paper>
 	);
 };

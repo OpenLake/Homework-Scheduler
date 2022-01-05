@@ -43,7 +43,7 @@ const NewForm = ({ courseId }) => {
 		formData.courseId = courseId;
 
 		sendRequest(reqCreateAssignment, formData, () => {
-			router.push(`/courses/${courseId}`);
+			router.push(`/courses/${courseId}/assignments`);
 		});
 	};
 
@@ -117,7 +117,11 @@ const NewForm = ({ courseId }) => {
 							)}
 						</Grid>
 						<Grid item xs={12}>
-							<TextEditor state={editorState} onChange={setEditorState} />
+							<TextEditor
+								state={editorState}
+								onChange={setEditorState}
+								title="Decription/Instructions"
+							/>
 						</Grid>
 					</Grid>
 					<Button
