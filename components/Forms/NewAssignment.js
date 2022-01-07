@@ -17,12 +17,14 @@ import TextField from '@mui/material/TextField';
 import Container from '@mui/material/Container';
 import { Icon } from '@mui/material';
 import LoadingSpinner from '../Utils/LoadingSpinner';
+import DateTimePicker from '../Utils/DateAndTimePicker';
 
 const TextEditor = dynamic(() => import('../Utils/TextEditor'), { ssr: false });
 
 const NewForm = ({ courseId }) => {
 	const router = useRouter();
 	const [editorState, setEditorState] = useState(EditorState.createEmpty());
+	const [dueDate, setDueDate] = useState(new Date());
 	const { isLoading, sendRequest } = useHttp();
 
 	const {
@@ -41,6 +43,7 @@ const NewForm = ({ courseId }) => {
 
 		formData.description = html;
 		formData.courseId = courseId;
+		formData.dueDate = dueDate;
 
 		sendRequest(reqCreateAssignment, formData, () => {
 			router.push(`/courses/${courseId}/assignments`);
@@ -92,29 +95,11 @@ const NewForm = ({ courseId }) => {
 							)}
 						</Grid>
 						<Grid item md={6} xs={12}>
-							<Controller
-								name="dueDate"
-								control={control}
-								rules={{
-									required: 'Due Date is Required',
-								}}
-								defaultValue="2022-01-01"
-								render={({ field }) => (
-									<TextField
-										{...field}
-										required
-										fullWidth
-										label="Due Date"
-										type="date"
-										error={!!errors.date}
-									/>
-								)}
+							<DateTimePicker
+								date={dueDate}
+								onChange={date => setDueDate(date)}
+								label="Due date"
 							/>
-							{errors.date && (
-								<Typography variant="caption" color="error">
-									{errors.date.message}
-								</Typography>
-							)}
 						</Grid>
 						<Grid item xs={12}>
 							<TextEditor

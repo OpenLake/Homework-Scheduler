@@ -72,7 +72,7 @@ const Home = () => {
 					</Typography>
 					<Stack
 						sx={{ pt: 2 }}
-						direction="row"
+						direction={{ xs: 'column', sm: 'row' }}
 						spacing={2}
 						justifyContent="center"
 					>
@@ -99,6 +99,7 @@ const Home = () => {
 					</Stack>
 				</Container>
 			</Box>
+			<Box height="30px" />
 		</main>
 	);
 };
