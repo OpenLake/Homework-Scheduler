@@ -1,4 +1,8 @@
+import { useContext } from 'react';
 import { useRouter } from 'next/router';
+
+import authContext from '../../helpers/auth-context';
+
 import {
 	TableRow,
 	Tooltip,
@@ -32,11 +36,15 @@ const calculateDaysLeft = (dueDate, status) => {
 const AssignmentEntry = props => {
 	const router = useRouter();
 	const { assignment } = props;
-	const auth = props.isEnrolled !== 'unauthenticated';
+	const { user, isAuthenticated: auth } = useContext(authContext);
 
 	const handleClick = () => {
 		router.push(`${router.asPath}/${assignment._id}`);
 	};
+
+	const status = assignment.submissions?.find(
+		sub => sub.submittedBy.toString() === user?._id.toString(),
+	);
 
 	return (
 		<TableRow hover sx={{ cursor: 'pointer' }} onClick={handleClick}>
@@ -54,25 +62,25 @@ const AssignmentEntry = props => {
 				</Typography>
 				{auth && props.isEnrolled && (
 					<Typography variant="body3" color="textSecondary">
-						{calculateDaysLeft(assignment.dueDate, assignment.status)}
+						{calculateDaysLeft(assignment.dueDate, status)}
 					</Typography>
 				)}
 			</TableCell>
 			{!props.isTeacher && auth && props.isEnrolled && (
 				<TableCell align="left" padding="normal">
 					<Tooltip
-						title={assignment.status ? 'Completed' : 'Pending'}
+						title={status ? 'Completed' : 'Pending'}
 						arrow
 						placement="left"
 					>
 						<Avatar
 							sx={{
-								bgcolor: assignment.status ? green[400] : red[300],
+								bgcolor: status ? green[400] : red[300],
 								width: '30px',
 								height: '30px',
 							}}
 						>
-							<Icon>{assignment.status ? 'check' : 'clear'}</Icon>
+							<Icon>{status ? 'check' : 'clear'}</Icon>
 						</Avatar>
 					</Tooltip>
 				</TableCell>
@@ -80,7 +88,7 @@ const AssignmentEntry = props => {
 			{props.isTeacher && auth && (
 				<TableCell align="center" padding="normal">
 					<Typography variant="body2" component="span">
-						{assignment.submissions}
+						{assignment.submissions?.length || 0}
 					</Typography>
 				</TableCell>
 			)}

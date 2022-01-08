@@ -1,5 +1,4 @@
 import { dbConnect } from '../../../../../lib/db';
-import isAuth from '../../../../../middlewares/api/isAuth';
 import catchErrors from '../../../../../helpers/api/catchErrors';
 import { Assignment, Course, Submission } from '../../../../../models';
 
@@ -9,50 +8,27 @@ const handler = async (req, res) => {
 	}
 	await dbConnect();
 	const { courseId } = req.query;
-	const course = await Course.findById(courseId);
+
+	const allPromises = Promise.all([
+		Course.findById(courseId),
+		Assignment.find({ course: courseId }),
+		Submission.find({ course: courseId }),
+	]);
+
+	const [course, assignments, submissions] = await allPromises;
 
 	if (!course) {
-		throw new CustomError(404, 'Course not found');
+		throw new CustomError('Course not found', 404);
 	}
 
-	const assignments = await Assignment.find({ course: courseId });
+	const assignmentWithSubmissions = assignments.map(assignment => {
+		const allSubmissions = submissions.find(
+			sub => sub._doc.assignment.toString() === assignment._doc._id.toString(),
+		);
+		return { ...assignment._doc, submissions: allSubmissions };
+	});
 
-	try {
-		await isAuth(req, res);
-		const isTeacher = req.user._id.toString() === course.creator.toString();
-		if (isTeacher) {
-			const submissions = await Submission.find({ course: courseId });
-			const data = assignments.map(assignment => {
-				const submission = submissions.filter(
-					sub => sub.assignment.toString() === assignment._id.toString(),
-				).length;
-				return {
-					...assignment.toObject(),
-					submissions: submission,
-				};
-			});
-
-			res.status(200).json(data);
-		} else {
-			const submissions = await Submission.find({
-				course: courseId,
-				submittedBy: req.user._id,
-			});
-			const data = assignments.map(assignment => {
-				const status = !!submissions.find(
-					sub => sub.assignment.toString() === assignment._id.toString(),
-				);
-				return {
-					...assignment.toObject(),
-					status,
-				};
-			});
-
-			res.status(200).json(data);
-		}
-	} catch (e) {
-		return res.json(assignments);
-	}
+	res.status(200).json(assignmentWithSubmissions);
 };
 
 export default catchErrors(handler);
