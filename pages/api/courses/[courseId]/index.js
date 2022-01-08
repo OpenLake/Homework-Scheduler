@@ -1,6 +1,6 @@
 import { dbConnect } from '../../../../lib/db';
 import isAuth from '../../../../middlewares/api/isAuth';
-import Course from '../../../../models/Course';
+import { Course } from '../../../../models';
 import catchErrors from '../../../../helpers/api/catchErrors';
 import CustomError from '../../../../helpers/api/CustomError';
 

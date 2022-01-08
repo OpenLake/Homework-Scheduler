@@ -1,5 +1,5 @@
 import { useRouter } from 'next/router';
-import Course from '../../models/Course';
+import { Course } from '../../models';
 import webRoutes from '../../helpers/webRoutes';
 import isAuth from '../../middlewares/isAuth';
 

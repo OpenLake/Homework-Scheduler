@@ -1,5 +1,5 @@
 import { dbConnect } from '../lib/db';
-import User from '../models/User';
+import { User } from '../models';
 
 const isAuth = (getServerSidePropsFunction, webRoute) => {
 	return async ctx => {

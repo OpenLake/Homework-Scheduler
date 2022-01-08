@@ -1,8 +1,7 @@
 import { dbConnect } from '../../../../../lib/db';
 import catchErrors from '../../../../../helpers/api/catchErrors';
 import CustomError from '../../../../../helpers/api/CustomError';
-import User from '../../../../../models/User';
-import Course from '../../../../../models/Course';
+import { User, Course } from '../../../../../models';
 
 const handler = async (req, res) => {
 	if (req.method !== 'GET') {

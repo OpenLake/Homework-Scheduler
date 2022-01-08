@@ -16,9 +16,9 @@ import {
 	Button,
 	Box,
 	Divider,
+	useMediaQuery,
 } from '@mui/material';
 import LoadingSpinner from '../components/Utils/LoadingSpinner';
-import BackButton from '../components/Utils/BackButton';
 import ConfirmationDialog from '../components/Utils/ConfirmationDialog';
 import Invite from '../components/Course/Invite';
 
@@ -49,7 +49,7 @@ const EnrolledButton = props => {
 	};
 
 	return (
-		<Box mr={1}>
+		<Box>
 			<Button
 				onClick={handleClick}
 				endIcon={
@@ -84,7 +84,7 @@ const InviteButton = ({ courseId }) => {
 	const [open, setOpen] = useState(false);
 
 	return (
-		<Box mr={1}>
+		<Box>
 			<Button onClick={() => setOpen(true)}>
 				Invite <Icon>add</Icon>
 			</Button>
@@ -104,6 +104,7 @@ export const useCourse = () => {
 };
 
 const CourseLayout = ({ children }) => {
+	const mq = useMediaQuery('(max-width:800px)');
 	const router = useRouter();
 	const { courseId } = router.query;
 	const [course, setCourse] = useState(null);
@@ -161,13 +162,26 @@ const CourseLayout = ({ children }) => {
 					direction="row"
 					justifyContent="space-between"
 					alignItems="center"
+					paddingX={2}
+					mb={1}
 				>
-					<BackButton />
-					<Tabs value={value} onChange={handleChange}>
-						<Tab label="Assignments" icon={<Icon>assignment</Icon>} />
-						<Tab label="Members" icon={<Icon>group</Icon>} />
-						<Tab label="Announcements" icon={<Icon>announcement</Icon>} />
-					</Tabs>
+					{!isLoading && (
+						<Stack mt={1}>
+							<Typography variant="h4" textAlign="left">
+								{course?.name}
+							</Typography>
+							<Typography variant="subtitle1" color="GrayText" textAlign="left">
+								{course?.code}
+							</Typography>
+						</Stack>
+					)}
+					{!mq && (
+						<Tabs value={value} onChange={handleChange}>
+							<Tab icon={<Icon>assignment</Icon>} label="assignment" />
+							<Tab icon={<Icon>group</Icon>} label="members" />
+							<Tab icon={<Icon>announcement</Icon>} label="announcements" />
+						</Tabs>
+					)}
 					{!isTeacher && (
 						<EnrolledButton
 							courseId={course?._id}
@@ -178,17 +192,14 @@ const CourseLayout = ({ children }) => {
 					{isTeacher && <InviteButton courseId={course?._id} />}
 				</Stack>
 				<Divider />
-				<LoadingSpinner isLoading={isLoading} />
-				{!isLoading && (
-					<Stack mt={2}>
-						<Typography variant="h5" textAlign="center">
-							{course?.name}
-						</Typography>
-						<Typography variant="subtitle1" color="GrayText" textAlign="center">
-							{course?.code}
-						</Typography>
-					</Stack>
+				{mq && (
+					<Tabs value={value} onChange={handleChange} variant="fullWidth">
+						<Tab icon={<Icon>assignment</Icon>} label="assignment" />
+						<Tab icon={<Icon>group</Icon>} label="members" />
+						<Tab icon={<Icon>announcement</Icon>} label="announcements" />
+					</Tabs>
 				)}
+				<LoadingSpinner isLoading={isLoading} />
 				{children}
 				<Box height="20px" />
 			</Box>

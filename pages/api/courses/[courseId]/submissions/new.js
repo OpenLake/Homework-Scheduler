@@ -2,8 +2,7 @@ import { dbConnect } from '../../../../../lib/db';
 import isAuth from '../../../../../middlewares/api/isAuth';
 import CustomError from '../../../../../helpers/api/CustomError';
 import catchErrors from '../../../../../helpers/api/catchErrors';
-import Submission from '../../../../../models/Submission';
-import Assignment from '../../../../../models/Assignment';
+import { Submission, Assignment } from '../../../../../models';
 
 const handler = async (req, res) => {
 	if (req.method !== 'POST') {

@@ -1,7 +1,7 @@
 import isAuth from '../../../../middlewares/isAuth';
 import webRoutes from '../.../../../../../helpers/webRoutes';
 
-import Course from '../../../../models/Course';
+import { Course } from '../../../../models';
 
 import { Box, Divider, Stack, Typography } from '@mui/material';
 import Error from 'next/error';

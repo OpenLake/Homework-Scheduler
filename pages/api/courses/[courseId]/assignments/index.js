@@ -1,9 +1,7 @@
 import { dbConnect } from '../../../../../lib/db';
 import isAuth from '../../../../../middlewares/api/isAuth';
 import catchErrors from '../../../../../helpers/api/catchErrors';
-import Assignment from '../../../../../models/Assignment';
-import Course from '../../../../../models/Course';
-import Submission from '../../../../../models/Submission';
+import { Assignment, Course, Submission } from '../../../../../models';
 
 const handler = async (req, res) => {
 	if (req.method !== 'GET') {

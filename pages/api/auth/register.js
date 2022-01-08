@@ -1,7 +1,7 @@
 import Cookies from 'cookies';
 import catchErrors from '../../../helpers/api/catchErrors';
 import { dbConnect } from '../../../lib/db';
-import User from '../../../models/User';
+import { User } from '../../../models';
 
 const handler = async (req, res) => {
 	await dbConnect();

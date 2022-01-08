@@ -1,5 +1,5 @@
 import CourseLayout, { useCourse } from '../../../../layouts/CourseLayout';
-import Assignment from '../../../../models/Assignment';
+import { Assignment } from '../../../../models';
 import { Typography, Box } from '@mui/material';
 
 const Index = props => {
