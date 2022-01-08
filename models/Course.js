@@ -1,16 +1,16 @@
 import mongoose from 'mongoose';
 
 const courseSchema = new mongoose.Schema({
-	courseName: {
+	name: {
 		type: String,
 		required: true,
 	},
-	courseCode: {
+	code: {
 		type: String,
 		required: true,
 		unique: true,
 	},
-	courseType: {
+	type: {
 		type: String,
 		enum: ['public', 'private'],
 		required: true,
@@ -19,7 +19,10 @@ const courseSchema = new mongoose.Schema({
 		type: mongoose.Schema.Types.ObjectId,
 		ref: 'User',
 	},
+	description: {
+		type: String,
+	},
 });
 
 module.exports =
-	mongoose.models.Course || mongoose.model('Course', courseSchema);
+	mongoose.models?.Course || mongoose.model('Course', courseSchema);

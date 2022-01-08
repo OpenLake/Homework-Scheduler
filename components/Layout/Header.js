@@ -18,7 +18,12 @@ import Avatar from '@mui/material/Avatar';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 
-const pages = [webRoutes.dashboard, webRoutes.login, webRoutes.signup];
+const pages = [
+	webRoutes.dashboard,
+	webRoutes.courses,
+	webRoutes.login,
+	webRoutes.signup,
+];
 const settings = [webRoutes.profile];
 
 const ResponsiveAppBar = () => {
@@ -114,14 +119,16 @@ const ResponsiveAppBar = () => {
 							})}
 						</Menu>
 					</Box>
-					<Typography
-						variant="h6"
-						noWrap
-						component="div"
-						sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}
-					>
-						Homework Scheduler
-					</Typography>
+					<Link href="/" passHref>
+						<MUILink
+							variant="h5"
+							color="inherit"
+							underline="none"
+							sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}
+						>
+							Homework Scheduler
+						</MUILink>
+					</Link>
 					<Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
 						{pages.map(page => {
 							if (!page.beforeAuth && !isAuthenticated) {
@@ -151,10 +158,7 @@ const ResponsiveAppBar = () => {
 						<Box sx={{ flexGrow: 0 }}>
 							<Tooltip title="Open settings">
 								<IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-									<Avatar
-										alt={user?.firstName}
-										src="/static/images/avatar/2.jpg"
-									/>
+									<Avatar alt={user?.firstName} src="#" />
 								</IconButton>
 							</Tooltip>
 							<Menu

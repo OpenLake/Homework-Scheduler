@@ -1,10 +1,9 @@
-const DOMAIN =
-	process.env.NODE_ENV === 'production'
-		? 'https://our-domain.com'
-		: 'http://localhost:3000';
+import { dbConnect } from '../lib/db';
+import User from '../models/User';
 
 const isAuth = (getServerSidePropsFunction, webRoute) => {
 	return async ctx => {
+		await dbConnect();
 		const { req } = ctx;
 		const token = req.cookies?.auth || null;
 
@@ -30,16 +29,10 @@ const isAuth = (getServerSidePropsFunction, webRoute) => {
 			return await getServerSidePropsFunction(ctx);
 		}
 
-		const response = await fetch(`${DOMAIN}/api/auth/check`, {
-			method: 'POST',
-			headers: {
-				'Content-Type': 'application/json',
-				Authorization: `Bearer ${token}`,
-			},
-			credentials: 'include',
-		});
-
-		if (!response.ok) {
+		try {
+			const user = await User.verifyToken(token);
+			return await getServerSidePropsFunction(ctx, user);
+		} catch (err) {
 			return {
 				redirect: {
 					destination: '/',
@@ -47,10 +40,6 @@ const isAuth = (getServerSidePropsFunction, webRoute) => {
 				},
 			};
 		}
-
-		const data = await response.json();
-
-		return await getServerSidePropsFunction(ctx, data.user || null);
 	};
 };
 

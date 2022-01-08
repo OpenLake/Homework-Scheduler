@@ -1,19 +1,21 @@
+import { dbConnect } from '../../../lib/db';
 import catchErrors from '../../../helpers/api/catchErrors';
 import Course from '../../../models/Course';
 import isAuth from '../../../middlewares/api/isAuth';
 
 const handler = async (req, res) => {
+	await dbConnect();
+
 	await isAuth(req, res);
-	const { courseName, courseCode, courseType } = req.body;
+	const { name, code, type, description } = req.body;
 
 	const course = await Course.create({
-		courseName,
-		courseCode,
-		courseType,
+		name,
+		code,
+		type,
+		description,
 		creator: req.user._id,
 	});
-
-	req.user.courses.push(course._id);
 
 	await req.user.save();
 	res.status(200).json(course);

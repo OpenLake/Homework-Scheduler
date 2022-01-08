@@ -19,11 +19,12 @@ const useHttp = (initialLoading = false) => {
 	});
 
 	const sendRequest = useCallback(
-		async (fn, args) => {
+		async (fn, args, cb) => {
 			dispatch({ type: 'SEND' });
 			try {
 				const responseData = await fn(args);
 				dispatch({ type: 'RESPONSE', responseData });
+				if (cb) cb(responseData);
 			} catch (err) {
 				dispatch({ type: 'ERROR', errorData: err.message });
 			}

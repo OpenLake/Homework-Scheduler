@@ -1,8 +1,11 @@
 import Cookies from 'cookies';
+import catchErrors from '../../../helpers/api/catchErrors';
 
 const handler = (req, res) => {
 	if (req.method === 'POST') {
-		const cookies = new Cookies(req, res);
+		const cookies = new Cookies(req, res, {
+			secure: process.env.NODE_ENV === 'production',
+		});
 		cookies.set('auth', '', {
 			httpOnly: true,
 			secure: process.env.NODE_ENV === 'production',
@@ -14,4 +17,4 @@ const handler = (req, res) => {
 	}
 };
 
-export default handler;
+export default catchErrors(handler);

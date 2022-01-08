@@ -4,12 +4,17 @@
  * @param {Object} res - Response object
  */
 export default function (err, res) {
+	if (err.statusCode === 500 || !err.statusCode) {
+		console.log(err);
+	}
+
 	if (err.name === 'ValidationError') {
 		const errors = {};
 		for (const key in err.errors) {
 			errors[key] = err.errors[key].message;
 		}
 		err.message = errors;
+		err.statusCode = 422;
 	} else if (err.name === 'MongoServerError') {
 		if (err.code === 11000) {
 			const dupKey = err.errmsg
@@ -18,6 +23,7 @@ export default function (err, res) {
 				.split('_')[0];
 			const dupValue = err.errmsg.split('dup key: ')[1].split('"')[1];
 			err.message = { [dupKey]: `${dupValue} already exists` };
+			err.statusCode = 400;
 		}
 	}
 	res

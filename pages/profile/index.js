@@ -4,7 +4,9 @@ import webRoutes from '../../helpers/webRoutes';
 import isAuth from '../../middlewares/isAuth';
 import Container from '@mui/material/Container';
 
-const dashboard = ({ user }) => {
+const dashboard = props => {
+	const user = JSON.parse(props.user);
+
 	return (
 		<Container maxWidth="md" sx={{ mt: 2 }}>
 			<Typography variant="h3" component="h1">
@@ -19,7 +21,7 @@ const dashboard = ({ user }) => {
 
 export const getServerSideProps = isAuth(async (ctx, user) => {
 	return {
-		props: { user },
+		props: { user: JSON.stringify(user) },
 	};
 }, webRoutes.profile);
 
