@@ -1,7 +1,7 @@
 import { dbConnect } from '../../../lib/db';
 import catchErrors from '../../../helpers/api/catchErrors';
 import CustomError from '../../../helpers/api/CustomError';
-import { Course } from '../../../models';
+import { Course, Submission } from '../../../models';
 import isAuth from '../../../middlewares/api/isAuth';
 
 const handler = async (req, res) => {
@@ -27,6 +27,11 @@ const handler = async (req, res) => {
 	req.user.courses = req.user.courses.filter(
 		c => c.toString() !== course._id.toString(),
 	);
+
+	await Submission.deleteMany({
+		submittedBy: req.user._id,
+		course: course._id,
+	});
 
 	await req.user.save();
 

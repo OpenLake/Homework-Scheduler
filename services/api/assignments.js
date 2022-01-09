@@ -31,3 +31,17 @@ export const reqCreateAssignment = async assignment => {
 
 	return data;
 };
+
+export const fetchAssignmentCountByDate = async dateData => {
+	const response = await fetch(
+		`/api/courses/${dateData.courseId}/assignments/${dateData.date}`,
+	);
+
+	const data = await response.json();
+
+	if (!response.ok) {
+		throw new CustomError(data.message);
+	}
+
+	return data;
+};

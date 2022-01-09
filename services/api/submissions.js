@@ -2,7 +2,7 @@ import CustomError from '../../helpers/api/CustomError';
 
 export const reqCreateSubmission = async submission => {
 	const response = await fetch(
-		`/api/course/${submission.courseId}/submissions/new`,
+		`/api/courses/${submission.courseId}/submissions/new`,
 		{
 			method: 'POST',
 			headers: {

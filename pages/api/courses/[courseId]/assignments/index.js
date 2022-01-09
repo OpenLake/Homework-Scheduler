@@ -22,7 +22,7 @@ const handler = async (req, res) => {
 	}
 
 	const assignmentWithSubmissions = assignments.map(assignment => {
-		const allSubmissions = submissions.find(
+		const allSubmissions = submissions.filter(
 			sub => sub._doc.assignment.toString() === assignment._doc._id.toString(),
 		);
 		return { ...assignment._doc, submissions: allSubmissions };

@@ -1,14 +1,15 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import dynamic from 'next/dynamic';
 import useHttp from '../../hooks/useHttp';
 import { EditorState } from 'draft-js';
 import { stateToHTML } from 'draft-js-export-html';
-
-import { useState } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { useRouter } from 'next/router';
 
-import { reqCreateAssignment } from '../../services/api/assignments';
+import {
+	reqCreateAssignment,
+	fetchAssignmentCountByDate,
+} from '../../services/api/assignments';
 import Button from '@mui/material/Button';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
@@ -18,6 +19,7 @@ import Container from '@mui/material/Container';
 import { Icon } from '@mui/material';
 import LoadingSpinner from '../Utils/LoadingSpinner';
 import DateTimePicker from '../Utils/DateAndTimePicker';
+import { format } from 'date-fns';
 
 const TextEditor = dynamic(() => import('../Utils/TextEditor'), { ssr: false });
 
@@ -26,6 +28,8 @@ const NewForm = ({ courseId }) => {
 	const [editorState, setEditorState] = useState(EditorState.createEmpty());
 	const [dueDate, setDueDate] = useState(new Date());
 	const { isLoading, sendRequest } = useHttp();
+	const [assignmentsCount, setAssignmentsCount] = useState({});
+	const [loadingCount, setLoadingCount] = useState(true);
 
 	const {
 		handleSubmit,
@@ -50,9 +54,32 @@ const NewForm = ({ courseId }) => {
 		});
 	};
 
+	const onMonthChange = date => {
+		setLoadingCount(true);
+		sendRequest(
+			fetchAssignmentCountByDate,
+			{ courseId, date: format(date, 'MM-yyyy') },
+			data => {
+				setAssignmentsCount(data);
+				setLoadingCount(false);
+			},
+		);
+	};
+
+	useEffect(() => {
+		sendRequest(
+			fetchAssignmentCountByDate,
+			{ courseId, date: format(new Date(), 'MM-yyyy') },
+			data => {
+				setAssignmentsCount(data);
+				setLoadingCount(false);
+			},
+		);
+	}, [sendRequest, courseId]);
+
 	return (
 		<Container component="main" maxWidth="md">
-			<LoadingSpinner isLoading={isLoading} />
+			<LoadingSpinner isLoading={isLoading && !loadingCount} />
 			<Box
 				sx={{
 					marginTop: 2,
@@ -99,6 +126,9 @@ const NewForm = ({ courseId }) => {
 								date={dueDate}
 								onChange={date => setDueDate(date)}
 								label="Due date"
+								onMonthChange={onMonthChange}
+								highlightDays={assignmentsCount}
+								isLoading={isLoading}
 							/>
 						</Grid>
 						<Grid item xs={12}>

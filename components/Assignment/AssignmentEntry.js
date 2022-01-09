@@ -19,12 +19,16 @@ const formatDate = date => {
 };
 
 const calculateDaysLeft = (dueDate, status) => {
+	if (status) {
+		return 'Completed';
+	}
+
 	const d = new Date(dueDate);
 	const now = new Date();
 	const diff = d.getTime() - now.getTime();
 	const daysLeft = Math.ceil(diff / (1000 * 3600 * 24));
 	if (daysLeft < 0) {
-		return status ? 'Completed' : 'Overdue';
+		return 'Overdue';
 	} else if (daysLeft === 0) {
 		return 'Due Today';
 	} else if (daysLeft === 1) {
