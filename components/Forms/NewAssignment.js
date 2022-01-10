@@ -19,7 +19,7 @@ import Container from '@mui/material/Container';
 import { Icon } from '@mui/material';
 import LoadingSpinner from '../Utils/LoadingSpinner';
 import DateTimePicker from '../Utils/DateAndTimePicker';
-import { format } from 'date-fns';
+import { format, isValid } from 'date-fns';
 
 const TextEditor = dynamic(() => import('../Utils/TextEditor'), { ssr: false });
 
@@ -30,6 +30,7 @@ const NewForm = ({ courseId }) => {
 	const { isLoading, sendRequest } = useHttp();
 	const [assignmentsCount, setAssignmentsCount] = useState({});
 	const [loadingCount, setLoadingCount] = useState(true);
+	const [dateError, setDateError] = useState(false);
 
 	const {
 		handleSubmit,
@@ -45,6 +46,10 @@ const NewForm = ({ courseId }) => {
 			return;
 		}
 
+		if (dateError) {
+			return;
+		}
+
 		formData.description = html;
 		formData.courseId = courseId;
 		formData.dueDate = dueDate;
@@ -52,6 +57,15 @@ const NewForm = ({ courseId }) => {
 		sendRequest(reqCreateAssignment, formData, () => {
 			router.push(`/courses/${courseId}/assignments`);
 		});
+	};
+
+	const onDateChange = date => {
+		setDueDate(date);
+		if (!date || !isValid(date)) {
+			setDateError(true);
+		} else {
+			setDateError(false);
+		}
 	};
 
 	const onMonthChange = date => {
@@ -124,12 +138,18 @@ const NewForm = ({ courseId }) => {
 						<Grid item md={6} xs={12}>
 							<DateTimePicker
 								date={dueDate}
-								onChange={date => setDueDate(date)}
+								onChange={onDateChange}
 								label="Due date"
 								onMonthChange={onMonthChange}
 								highlightDays={assignmentsCount}
 								isLoading={isLoading}
+								error={dateError}
 							/>
+							{dateError && (
+								<Typography variant="caption" color="error">
+									Please select a valid date
+								</Typography>
+							)}
 						</Grid>
 						<Grid item xs={12}>
 							<TextEditor
@@ -144,7 +164,7 @@ const NewForm = ({ courseId }) => {
 						fullWidth
 						variant="contained"
 						sx={{ mt: 3, mb: 2 }}
-						disabled={Object.keys(errors).length > 0}
+						disabled={Object.keys(errors).length > 0 || dateError}
 						endIcon={<Icon>send</Icon>}
 					>
 						Create

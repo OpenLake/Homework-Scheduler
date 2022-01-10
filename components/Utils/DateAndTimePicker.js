@@ -35,10 +35,12 @@ const RenderDay = ({ day, DayComponentProps, highlightDays }) => {
 const Picker = ({
 	date,
 	onChange,
+	onError,
 	label,
 	onMonthChange,
 	highlightDays = {},
 	isLoading = false,
+	error,
 }) => {
 	const handleDateChange = newDate => {
 		onChange(newDate);
@@ -57,7 +59,7 @@ const Picker = ({
 				loading={isLoading}
 				renderLoading={() => <CalendarPickerSkeleton />}
 				onChange={handleDateChange}
-				renderInput={props => <TextField {...props} fullWidth />}
+				renderInput={props => <TextField {...props} fullWidth error={error} />}
 				label={label || 'Date and time picker'}
 				minDate={new Date()}
 				onYearChange={handleMonthChange}
@@ -71,6 +73,7 @@ const Picker = ({
 					/>
 				)}
 				desktopModeMediaQuery="@media (min-width:600px)"
+				onError={onError ? onError : null}
 			/>
 		</LocalizationProvider>
 	);

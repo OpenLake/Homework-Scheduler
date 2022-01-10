@@ -11,12 +11,8 @@ import {
 	Icon,
 	Avatar,
 } from '@mui/material';
-import { red, green, yellow } from '@mui/material/colors';
-
-const formatDate = date => {
-	const d = new Date(date);
-	return `${d.getDate()}/${d.getMonth() + 1}/${d.getFullYear()}`;
-};
+import { red, green } from '@mui/material/colors';
+import { format } from 'date-fns';
 
 const calculateDaysLeft = (dueDate, status) => {
 	if (status) {
@@ -62,7 +58,7 @@ const AssignmentEntry = props => {
 				padding="normal"
 			>
 				<Typography variant="body2">
-					{formatDate(assignment.dueDate)}
+					{format(new Date(assignment.dueDate), 'MMM dd, yyyy')}
 				</Typography>
 				{auth && props.isEnrolled && (
 					<Typography variant="body3" color="textSecondary">

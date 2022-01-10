@@ -5,7 +5,7 @@ import { Fragment } from 'react';
 import { Typography } from '@mui/material';
 
 const wrapperStyle = {
-	border: '1px solid #969696',
+	border: '1px solid #ccc',
 };
 
 const editorStyle = {
@@ -28,7 +28,7 @@ const TextEditor = ({ onChange, state, title }) => {
 				wrapperStyle={wrapperStyle}
 				editorStyle={editorStyle}
 				toolbar={{
-					options: ['inline', 'blockType', 'list', 'link', 'image'],
+					options: ['inline', 'blockType', 'list', 'link', 'image', 'emoji'],
 				}}
 				onEditorStateChange={onEditorStateChange}
 			/>

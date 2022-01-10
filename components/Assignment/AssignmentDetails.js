@@ -13,7 +13,8 @@ const Assignment = ({ assignment }) => {
 			</Typography>
 			<Typography variant="body2" color="textSecondary">
 				<i>
-					Due Date - {format(new Date(assignment.dueDate), 'MMMM dd, yyyy')}
+					Due Date -{' '}
+					{format(new Date(assignment.dueDate), "MMMM dd, yyyy 'at' h:mm a")}
 				</i>
 			</Typography>
 			<Typography variant="h4" fontWeight={2} mt={1}>
