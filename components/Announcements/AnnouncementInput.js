@@ -1,7 +1,19 @@
 import { useState } from 'react';
-import { TextField, Icon, IconButton, InputAdornment } from '@mui/material';
+import {
+	TextField,
+	Icon,
+	IconButton,
+	InputAdornment,
+	Typography,
+} from '@mui/material';
 
-const AnnouncementInput = ({ onSend, label, placeholder }) => {
+const AnnouncementInput = ({
+	onSend,
+	label,
+	placeholder,
+	helperText,
+	disabled,
+}) => {
 	const [message, setMessage] = useState('');
 	const [error, setError] = useState(false);
 
@@ -10,6 +22,11 @@ const AnnouncementInput = ({ onSend, label, placeholder }) => {
 			setError(true);
 			return;
 		}
+
+		if (disabled) {
+			return;
+		}
+
 		onSend && onSend(message);
 		setMessage('');
 	};
@@ -39,14 +56,18 @@ const AnnouncementInput = ({ onSend, label, placeholder }) => {
 				InputProps={{
 					endAdornment: (
 						<InputAdornment position="end">
-							<IconButton onClick={onClick} disabled={error} color="primary">
+							<IconButton
+								onClick={onClick}
+								disabled={error || disabled}
+								color="primary"
+							>
 								<Icon>send</Icon>
 							</IconButton>
 						</InputAdornment>
 					),
 				}}
 				error={error}
-				helperText={error && 'Please enter a message'}
+				helperText={(error && 'Please enter a message') || helperText}
 			/>
 		</div>
 	);

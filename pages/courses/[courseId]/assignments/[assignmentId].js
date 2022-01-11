@@ -13,6 +13,8 @@ import {
 	Box,
 	Typography,
 	Divider,
+	Stack,
+	Icon,
 } from '@mui/material';
 
 import AssignmentDetails from '../../../../components/Assignment/AssignmentDetails';
@@ -25,7 +27,7 @@ import LoadingSpinner from '../../../../components/Utils/LoadingSpinner';
 const Index = props => {
 	const assignment = JSON.parse(props.assignment);
 	const submissions = JSON.parse(props.submissions);
-	const { user } = useContext(authContext);
+	const { user, isAuthenticated: auth } = useContext(authContext);
 	const { isEnrolled, isTeacher, courseId } = useCourse();
 	const { isLoading, sendRequest } = useHttp();
 
@@ -47,6 +49,14 @@ const Index = props => {
 			setAnnouncements([data, ...announcements]);
 		});
 	};
+
+	const onDelete = id => {
+		setAnnouncements(prev =>
+			prev.filter(announcement => announcement._id.toString() !== id),
+		);
+	};
+
+	const discussionDisabled = (!isEnrolled || !auth) && !isTeacher;
 
 	return (
 		<Container sx={{ p: 2 }}>
@@ -90,12 +100,12 @@ const Index = props => {
 							</Box>
 						)}
 						{!isEnrolled && (
-							<Box>
-								<Typography variant="h5" fontWeight="300">
-									Enroll in this course to submit this assignment by clicking
-									the Enroll Button above
+							<Stack mt={1} direction="row" alignItems="center" spacing={1}>
+								<Icon color="info">info</Icon>
+								<Typography variant="body2" color="Highlight">
+									You must be enrolled in this course to submit this assignment.
 								</Typography>
-							</Box>
+							</Stack>
 						)}
 					</Grid>
 				)}
@@ -104,8 +114,36 @@ const Index = props => {
 						Discussion
 					</Typography>
 					<Divider sx={{ mb: 1 }} />
-					<AnnouncementInput label="Discuss" onSend={onNewAnnouncement} />
-					<Announcements announcements={announcements} alt="No comments yet" />
+					<AnnouncementInput
+						label="Discuss"
+						onSend={onNewAnnouncement}
+						disabled={discussionDisabled}
+						helperText={
+							discussionDisabled && (
+								<Stack
+									mt={1}
+									direction="row"
+									alignItems="center"
+									spacing={1}
+									component="span"
+								>
+									<Icon color="info">info</Icon>
+									<Typography
+										variant="body2"
+										color="Highlight"
+										component="span"
+									>
+										You must be enrolled in this course to post announcements.
+									</Typography>
+								</Stack>
+							)
+						}
+					/>
+					<Announcements
+						announcements={announcements}
+						alt="No comments yet"
+						onDelete={onDelete}
+					/>
 				</Grid>
 			</Grid>
 			<Box height="50px" />
