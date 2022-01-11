@@ -5,8 +5,10 @@ const ObjectId = Schema.Types.ObjectId;
 
 const announcementSchema = new Schema(
 	{
-		title: {
+		type: {
 			type: String,
+			default: 'general',
+			enum: ['general', 'assignment'],
 		},
 		content: {
 			type: String,

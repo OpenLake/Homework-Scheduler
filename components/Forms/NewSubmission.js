@@ -49,17 +49,9 @@ const SubmissionForm = props => {
 	return (
 		<Box>
 			<LoadingSpinner isLoading={isLoading} />
-			<Typography component="h1" variant="h5">
-				Submit Your Work
-			</Typography>
 			<Box component="form" noValidate onSubmit={onSubmit} sx={{ mt: 3 }}>
 				<TextEditor state={editorState} onChange={setEditorState} />
-				<Button
-					type="submit"
-					fullWidth
-					variant="contained"
-					sx={{ mt: 3, mb: 2 }}
-				>
+				<Button type="submit" variant="contained" sx={{ mt: 2, px: 10 }}>
 					Submit
 				</Button>
 			</Box>

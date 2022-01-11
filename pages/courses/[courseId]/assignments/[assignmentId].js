@@ -1,33 +1,62 @@
 import { useContext, useState } from 'react';
+import useHttp from '../../../../hooks/useHttp';
 import CourseLayout, { useCourse } from '../../../../layouts/CourseLayout';
-import { Assignment, Submission } from '../../../../models';
+import { Assignment, Submission, Announcement } from '../../../../models';
 
+import { reqCreateAnnouncement } from '../../../../services/api/announcements';
 import authContext from '../../../../helpers/auth-context';
 
-import { Container, Grid, Button, Box, Typography } from '@mui/material';
+import {
+	Container,
+	Grid,
+	Button,
+	Box,
+	Typography,
+	Divider,
+} from '@mui/material';
 
 import AssignmentDetails from '../../../../components/Assignment/AssignmentDetails';
 import Stats from '../../../../components/Assignment/Stats';
 import NewSubmissionForm from '../../../../components/Forms/NewSubmission';
+import AnnouncementInput from '../../../../components/Announcements/AnnouncementInput';
+import Announcements from '../../../../components/Announcements/Announcements';
+import LoadingSpinner from '../../../../components/Utils/LoadingSpinner';
 
 const Index = props => {
 	const assignment = JSON.parse(props.assignment);
 	const submissions = JSON.parse(props.submissions);
 	const { user } = useContext(authContext);
 	const { isEnrolled, isTeacher, courseId } = useCourse();
+	const { isLoading, sendRequest } = useHttp();
 
+	const [announcements, setAnnouncements] = useState(
+		JSON.parse(props.announcements),
+	);
 	const [isSubmitted, setIsSubmitted] = useState(
 		submissions.find(submission => submission.submittedBy === user?._id),
 	);
 
+	const onNewAnnouncement = content => {
+		const reqData = {
+			content,
+			courseId,
+			assignmentId: assignment._id,
+			type: 'assignment',
+		};
+		sendRequest(reqCreateAnnouncement, reqData, data => {
+			setAnnouncements([data, ...announcements]);
+		});
+	};
+
 	return (
 		<Container sx={{ p: 2 }}>
-			<Grid container spacing={10}>
-				<Grid item xs={12} md={6}>
+			<LoadingSpinner isLoading={isLoading} />
+			<Grid container rowSpacing={3}>
+				<Grid item xs={12}>
 					<AssignmentDetails assignment={assignment} />
 				</Grid>
 				{isTeacher && (
-					<Grid item xs={12} md={6}>
+					<Grid item xs={12}>
 						<Stats
 							submissions={submissions.length}
 							assignedTo={assignment.assignedTo.length}
@@ -38,7 +67,11 @@ const Index = props => {
 					</Grid>
 				)}
 				{!isTeacher && (
-					<Grid item xs={12} md={6}>
+					<Grid item xs={12}>
+						<Typography variant="h4" fontWeight={2}>
+							Submit
+						</Typography>
+						<Divider sx={{ mb: 1 }} />
 						{isEnrolled && !isSubmitted && (
 							<NewSubmissionForm
 								assignmentId={assignment._id}
@@ -48,7 +81,7 @@ const Index = props => {
 						)}
 						{isSubmitted && (
 							<Box>
-								<Typography variant="h5">
+								<Typography variant="h5" fontWeight="300">
 									You have already submitted this assignment.
 								</Typography>
 								<Button variant="contained" color="primary" sx={{ mt: 2 }}>
@@ -58,17 +91,24 @@ const Index = props => {
 						)}
 						{!isEnrolled && (
 							<Box>
-								<Typography variant="h4">Not Enrolled !</Typography>
-								<Typography variant="h6" fontWeight="300">
+								<Typography variant="h5" fontWeight="300">
 									Enroll in this course to submit this assignment by clicking
-									the button above
+									the Enroll Button above
 								</Typography>
 							</Box>
 						)}
 					</Grid>
 				)}
+				<Grid item xs={12} mt={2}>
+					<Typography variant="h4" fontWeight={2}>
+						Discussion
+					</Typography>
+					<Divider sx={{ mb: 1 }} />
+					<AnnouncementInput label="Discuss" onSend={onNewAnnouncement} />
+					<Announcements announcements={announcements} alt="No comments yet" />
+				</Grid>
 			</Grid>
-			<Box height="30px" />
+			<Box height="50px" />
 		</Container>
 	);
 };
@@ -97,10 +137,18 @@ export const getServerSideProps = async ctx => {
 		course: courseId,
 	});
 
+	const announcements = await Announcement.find({
+		course: courseId,
+		assignment: assignmentId,
+	})
+		.sort({ createdAt: -1 })
+		.populate('user');
+
 	return {
 		props: {
 			assignment: JSON.stringify(assignment),
 			submissions: JSON.stringify(submissions),
+			announcements: JSON.stringify(announcements),
 		},
 	};
 };

@@ -4,7 +4,7 @@ import { Assignment, Course, Submission } from '../../../../../models';
 
 const handler = async (req, res) => {
 	if (req.method !== 'GET') {
-		throw new CustomError(405, 'Method not allowed');
+		throw new CustomError('Method not allowed', 405);
 	}
 	await dbConnect();
 	const { courseId } = req.query;

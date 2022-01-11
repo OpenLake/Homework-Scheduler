@@ -5,7 +5,7 @@ import { User, Course } from '../../../../../models';
 
 const handler = async (req, res) => {
 	if (req.method !== 'GET') {
-		throw new CustomError(405, 'Method not allowed');
+		throw new CustomError('Method not allowed', 405);
 	}
 	await dbConnect();
 
@@ -18,7 +18,7 @@ const handler = async (req, res) => {
 	});
 
 	if (!course) {
-		throw new CustomError(404, 'Course not found');
+		throw new CustomError('Course not found', 404);
 	}
 
 	const students = await User.find(

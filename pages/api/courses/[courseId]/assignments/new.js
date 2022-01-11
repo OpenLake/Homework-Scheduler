@@ -6,7 +6,7 @@ import { Assignment, Course } from '../../../../../models';
 
 const handler = async (req, res) => {
 	if (req.method !== 'POST') {
-		throw new CustomError(405, 'Method not allowed');
+		throw new CustomError('Method not allowed', 405);
 	}
 
 	await dbConnect();
@@ -18,11 +18,11 @@ const handler = async (req, res) => {
 	const course = await Course.findById(courseId);
 
 	if (!course) {
-		throw new CustomError(404, 'Course not found');
+		throw new CustomError('Course not found', 404);
 	}
 
 	if (course.creator.toString() !== req.user._id.toString()) {
-		throw new CustomError(403, 'You are not authorized to perform this action');
+		throw new CustomError('You are not authorized to perform this action', 403);
 	}
 
 	const assignment = new Assignment({

@@ -6,7 +6,7 @@ import { Submission, Assignment } from '../../../../../models';
 
 const handler = async (req, res) => {
 	if (req.method !== 'POST') {
-		throw new CustomError(405, 'Method not allowed');
+		throw new CustomError('Method not allowed', 405);
 	}
 
 	await dbConnect();
@@ -17,7 +17,13 @@ const handler = async (req, res) => {
 	const assignment = await Assignment.findById(assignmentId);
 
 	if (!assignment) {
-		throw new CustomError(404, 'Assignment not found');
+		throw new CustomError('Assignment not found', 404);
+	}
+
+	const isEnrolled = req.user.courses.includes(assignment.course);
+
+	if (!isEnrolled) {
+		throw new CustomError('You are not enrolled in this course', 403);
 	}
 
 	const submission = new Submission({
