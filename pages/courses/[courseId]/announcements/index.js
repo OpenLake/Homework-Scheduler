@@ -78,7 +78,7 @@ Index.Layout = CourseLayout;
 
 export const getServerSideProps = async ctx => {
 	const { courseId } = ctx.query;
-	const announcements = await Announcement.find({ courseId, type: 'general' })
+	const announcements = await Announcement.find({ course: courseId, type: 'general' })
 		.sort({ createdAt: -1 })
 		.populate('user', {
 			_id: 1,
