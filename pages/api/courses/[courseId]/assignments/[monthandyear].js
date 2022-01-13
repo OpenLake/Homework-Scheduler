@@ -72,6 +72,7 @@ const handler = async (req, res) => {
 	const filteredAssignments = filterAssignments(assignments, monthandyear);
 
 	const assignmentCount = countAssignments(filteredAssignments);
+
 	res.json(assignmentCount);
 };
 

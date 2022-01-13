@@ -23,6 +23,18 @@ const submissionSchema = mongoose.Schema({
 		type: ObjectId,
 		ref: 'User',
 	},
+	marks: {
+		type: Number,
+		default: 0,
+	},
+	status: {
+		type: String,
+		enum: ['pending', 'graded'],
+		default: 'pending',
+	},
+	feedback: {
+		type: String,
+	},
 });
 
 module.exports =

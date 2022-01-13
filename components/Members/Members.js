@@ -65,7 +65,7 @@ const People = ({ courseId, isTeacher }) => {
 			<Divider />
 			<List>
 				{students.map(student => (
-					<ListItem key={student._id}>
+					<ListItem key={student._id} sx={{ mb: 1 }}>
 						<Avatar src="#" alt={student.firstName} />
 						<Typography variant="body1" ml={1}>
 							{student.firstName} {student.lastName}
