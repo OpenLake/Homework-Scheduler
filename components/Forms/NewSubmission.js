@@ -42,7 +42,7 @@ const SubmissionForm = props => {
 				assignmentId: props.assignmentId,
 				courseId: props.courseId,
 			},
-			() => props.onSubmit(),
+			() => props.onSubmit(html),
 		);
 	};
 

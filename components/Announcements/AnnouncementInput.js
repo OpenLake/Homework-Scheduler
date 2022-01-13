@@ -1,11 +1,5 @@
 import { useState } from 'react';
-import {
-	TextField,
-	Icon,
-	IconButton,
-	InputAdornment,
-	Typography,
-} from '@mui/material';
+import { TextField, Icon, IconButton, InputAdornment } from '@mui/material';
 
 const AnnouncementInput = ({
 	onSend,

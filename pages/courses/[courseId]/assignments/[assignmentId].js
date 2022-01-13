@@ -16,6 +16,7 @@ import {
 	Stack,
 	Icon,
 } from '@mui/material';
+import { format } from 'date-fns';
 
 import AssignmentDetails from '../../../../components/Assignment/AssignmentDetails';
 import Stats from '../../../../components/Assignment/Stats';
@@ -34,7 +35,7 @@ const Index = props => {
 	const [announcements, setAnnouncements] = useState(
 		JSON.parse(props.announcements),
 	);
-	const [isSubmitted, setIsSubmitted] = useState(
+	const [submission, setSubmission] = useState(
 		submissions.find(submission => submission.submittedBy === user?._id),
 	);
 
@@ -79,24 +80,32 @@ const Index = props => {
 				{!isTeacher && (
 					<Grid item xs={12}>
 						<Typography variant="h4" fontWeight={2}>
-							Submit
+							{!submission ? 'Submit' : 'Your Submission'}
 						</Typography>
 						<Divider sx={{ mb: 1 }} />
-						{isEnrolled && !isSubmitted && (
+						{isEnrolled && !submission && (
 							<NewSubmissionForm
 								assignmentId={assignment._id}
 								courseId={courseId}
-								onSubmit={() => setIsSubmitted(true)}
+								onSubmit={submission => setSubmission(submission)}
 							/>
 						)}
-						{isSubmitted && (
+						{submission && (
 							<Box>
-								<Typography variant="h5" fontWeight="300">
-									You have already submitted this assignment.
+								<Typography variant="body2" color="textSecondary">
+									<i>
+										Submitted on{' '}
+										{format(
+											new Date(submission.createdAt || Date.now()),
+											"MMM dd, yyyy 'at' hh:mm a",
+										)}
+									</i>
 								</Typography>
-								<Button variant="contained" color="primary" sx={{ mt: 2 }}>
-									View Submission
-								</Button>
+								<div
+									dangerouslySetInnerHTML={{
+										__html: submission.content || submission,
+									}}
+								/>
 							</Box>
 						)}
 						{!isEnrolled && (
