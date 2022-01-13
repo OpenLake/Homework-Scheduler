@@ -30,6 +30,11 @@ const AnnouncementItem = ({ announcement, onDelete }) => {
 	const { isTeacher, courseId } = useCourse();
 	const [anchor, setAnchor] = useState(null);
 	const [isEditing, setIsEditing] = useState(false);
+	const [isEditedOn, setIsEditedOn] = useState(
+		announcement.updatedAt !== announcement.createdAt
+			? announcement.updatedAt
+			: null,
+	);
 	const [content, setContent] = useState(announcement.content);
 	const open = Boolean(anchor);
 	const { user } = useContext(authContext);
@@ -52,6 +57,7 @@ const AnnouncementItem = ({ announcement, onDelete }) => {
 		sendRequest(reqEditAnnouncement, reqData, () => {
 			setAnchor(null);
 			setIsEditing(false);
+			setIsEditedOn(new Date());
 		});
 	};
 
@@ -80,7 +86,11 @@ const AnnouncementItem = ({ announcement, onDelete }) => {
 							<Typography variant="body1" fontWeight="400" mb={-1}>
 								{announcement.user.firstName} {announcement.user.lastName}
 							</Typography>
-							<Typography variant="caption" color="textSecondary">
+							<Typography
+								variant="caption"
+								color="textSecondary"
+								component="span"
+							>
 								{formatDistanceToNow(new Date(announcement.createdAt), {
 									addSuffix: true,
 								})}
@@ -88,7 +98,23 @@ const AnnouncementItem = ({ announcement, onDelete }) => {
 						</Fragment>
 					}
 					secondary={
-						!isEditing && <Typography variant="body1">{content}</Typography>
+						!isEditing && (
+							<Typography variant="body1">
+								{content}
+								{isEditedOn && (
+									<Typography
+										variant="caption"
+										color="textSecondary"
+										component="span"
+									>
+										{` (Edited
+										${formatDistanceToNow(new Date(isEditedOn), {
+											addSuffix: true,
+										})})`}
+									</Typography>
+								)}
+							</Typography>
+						)
 					}
 				/>
 				{isEditing && (
@@ -100,6 +126,9 @@ const AnnouncementItem = ({ announcement, onDelete }) => {
 							if (e.key === 'Enter' && !e.shiftKey) {
 								e.preventDefault();
 								editAnnouncement();
+							}
+							if (e.key === 'Escape') {
+								setIsEditing(false);
 							}
 						}}
 						onChange={e => setContent(e.target.value)}
