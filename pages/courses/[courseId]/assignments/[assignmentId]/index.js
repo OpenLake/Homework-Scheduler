@@ -1,10 +1,14 @@
+import { dbConnect } from '../../../../../lib/db';
 import { useContext, useState } from 'react';
-import useHttp from '../../../../hooks/useHttp';
-import CourseLayout, { useCourse } from '../../../../layouts/CourseLayout';
-import { Assignment, Submission, Announcement } from '../../../../models';
+import { useRouter } from 'next/router';
+import useHttp from '../../../../../hooks/useHttp';
+import { validateSlugs } from '../../../../../helpers/validateSlugs';
 
-import { reqCreateAnnouncement } from '../../../../services/api/announcements';
-import authContext from '../../../../helpers/auth-context';
+import CourseLayout, { useCourse } from '../../../../../layouts/CourseLayout';
+import { Assignment, Submission, Announcement } from '../../../../../models';
+
+import { reqCreateAnnouncement } from '../../../../../services/api/announcements';
+import authContext from '../../../../../helpers/auth-context';
 
 import {
 	Container,
@@ -18,14 +22,15 @@ import {
 } from '@mui/material';
 import { format } from 'date-fns';
 
-import AssignmentDetails from '../../../../components/Assignment/AssignmentDetails';
-import Stats from '../../../../components/Assignment/Stats';
-import NewSubmissionForm from '../../../../components/Forms/NewSubmission';
-import AnnouncementInput from '../../../../components/Announcements/AnnouncementInput';
-import Announcements from '../../../../components/Announcements/Announcements';
-import LoadingSpinner from '../../../../components/Utils/LoadingSpinner';
+import AssignmentDetails from '../../../../../components/Assignment/AssignmentDetails';
+import Stats from '../../../../../components/Assignment/Stats';
+import NewSubmissionForm from '../../../../../components/Forms/NewSubmission';
+import AnnouncementInput from '../../../../../components/Announcements/AnnouncementInput';
+import Announcements from '../../../../../components/Announcements/Announcements';
+import LoadingSpinner from '../../../../../components/Utils/LoadingSpinner';
 
 const Index = props => {
+	const router = useRouter();
 	const assignment = JSON.parse(props.assignment);
 	const submissions = JSON.parse(props.submissions);
 	const { user, isAuthenticated: auth } = useContext(authContext);
@@ -35,6 +40,7 @@ const Index = props => {
 	const [announcements, setAnnouncements] = useState(
 		JSON.parse(props.announcements),
 	);
+
 	const [submission, setSubmission] = useState(
 		submissions.find(submission => submission.submittedBy === user?._id),
 	);
@@ -57,6 +63,12 @@ const Index = props => {
 		);
 	};
 
+	const viewSubmissions = () => {
+		router.push(
+			`/courses/${courseId}/assignments/${assignment._id}/submissions`,
+		);
+	};
+
 	const discussionDisabled = (!isEnrolled || !auth) && !isTeacher;
 
 	return (
@@ -72,7 +84,12 @@ const Index = props => {
 							submissions={submissions.length}
 							assignedTo={assignment.assignedTo.length}
 						/>
-						<Button variant="contained" color="warning" sx={{ mt: 2 }}>
+						<Button
+							variant="contained"
+							color="warning"
+							sx={{ mt: 2 }}
+							onClick={viewSubmissions}
+						>
 							View Submissions
 						</Button>
 					</Grid>
@@ -170,6 +187,14 @@ const Index = props => {
 Index.Layout = CourseLayout;
 
 export const getServerSideProps = async ctx => {
+	if (!validateSlugs(ctx)) {
+		return {
+			notFound: true,
+		};
+	}
+
+	await dbConnect();
+
 	const { courseId, assignmentId } = ctx.query;
 
 	const assignment = await Assignment.findOne({
@@ -180,8 +205,8 @@ export const getServerSideProps = async ctx => {
 	if (!assignment) {
 		return {
 			redirect: {
-				status: 302,
-				url: `/courses/${courseId}/assignments`,
+				permanent: false,
+				destination: `/courses/${courseId}/assignments`,
 			},
 		};
 	}

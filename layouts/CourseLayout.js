@@ -1,11 +1,15 @@
 import { useState, useEffect, createContext, useContext } from 'react';
 import { useRouter } from 'next/router';
+import ErrorPage from 'next/error';
+
 import useHttp from '../hooks/useHttp';
 import {
 	getCourseById,
 	reqJoinCourse,
 	reqLeaveCourse,
 } from '../services/api/courses';
+
+import { isValidID } from '../helpers/validateSlugs';
 
 import {
 	Tabs,
@@ -107,16 +111,22 @@ const CourseLayout = ({ children }) => {
 	const mq = useMediaQuery('(max-width:800px)');
 	const router = useRouter();
 	const { courseId } = router.query;
+	const [slugError, setSlugError] = useState(false);
 	const [course, setCourse] = useState(null);
 	const [value, setValue] = useState(0);
 	const [isTeacher, setIsTeacher] = useState(false);
 	const [isEnrolled, setIsEnrolled] = useState(false);
-	const { isLoading, sendRequest } = useHttp();
+	const { isLoading, sendRequest, error } = useHttp();
 
 	useEffect(() => {
 		if (!courseId) {
 			return;
 		}
+
+		if (!isValidID(courseId)) {
+			setSlugError(true);
+		}
+
 		sendRequest(getCourseById, courseId, data => {
 			setCourse(data.course);
 			setIsTeacher(data.isTeacher);
@@ -147,6 +157,10 @@ const CourseLayout = ({ children }) => {
 				break;
 		}
 	};
+
+	if (slugError || error) {
+		return <ErrorPage statusCode="404" title="Course not found" />;
+	}
 
 	return (
 		<CourseContext.Provider

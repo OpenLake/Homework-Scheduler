@@ -1,16 +1,18 @@
 import { Divider, Typography, Box } from '@mui/material';
 import { format } from 'date-fns';
 
-const Assignment = ({ assignment }) => {
+const Assignment = ({ assignment, instructions = true }) => {
 	return (
 		<Box>
 			<Typography variant="h4">{assignment.title}</Typography>
-			<Typography variant="body2" color="textSecondary">
-				<i>
-					Assigned by - {assignment.createdBy.firstName}{' '}
-					{assignment.createdBy.lastName}
-				</i>
-			</Typography>
+			{assignment.createdBy.firstName && (
+				<Typography variant="body2" color="textSecondary">
+					<i>
+						Assigned by - {assignment.createdBy.firstName}{' '}
+						{assignment.createdBy.lastName}
+					</i>
+				</Typography>
+			)}
 			<Typography variant="body2" color="textSecondary">
 				<i>
 					Due Date -{' '}
@@ -20,11 +22,15 @@ const Assignment = ({ assignment }) => {
 			<Typography variant="body2" color="textSecondary">
 				<i>Max Marks - {assignment.maxMarks}</i>
 			</Typography>
-			<Typography variant="h4" fontWeight={2} mt={1}>
-				Instructions
-			</Typography>
-			<Divider />
-			<div dangerouslySetInnerHTML={{ __html: assignment.description }} />
+			{instructions && (
+				<>
+					<Typography variant="h4" fontWeight={2} mt={1}>
+						Instructions
+					</Typography>
+					<Divider />
+					<div dangerouslySetInnerHTML={{ __html: assignment.description }} />
+				</>
+			)}
 		</Box>
 	);
 };

@@ -1,5 +1,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/router';
+import { dbConnect } from '../../../../lib/db';
+import { validateSlugs } from '../../../../helpers/validateSlugs';
 import { useCourse } from '../../../../layouts/CourseLayout';
 import useHttp from '../../../../hooks/useHttp';
 import { Container, Typography, Icon, Box, Stack } from '@mui/material';
@@ -77,6 +79,13 @@ const Index = props => {
 Index.Layout = CourseLayout;
 
 export const getServerSideProps = async ctx => {
+	if (!validateSlugs(ctx)) {
+		return {
+			notFound: true,
+		}
+	}
+	
+	await dbConnect();
 	const { courseId } = ctx.query;
 	const announcements = await Announcement.find({ course: courseId, type: 'general' })
 		.sort({ createdAt: -1 })
