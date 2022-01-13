@@ -101,6 +101,13 @@ const Index = props => {
 										)}
 									</i>
 								</Typography>
+								<Typography variant="body2" color="textSecondary">
+									<i>
+										{submission.status !== 'graded'
+											? 'Teacher has not graded your submission yet'
+											: `Marks Obtained - ${submission.marks}`}
+									</i>
+								</Typography>
 								<div
 									dangerouslySetInnerHTML={{
 										__html: submission.content || submission,

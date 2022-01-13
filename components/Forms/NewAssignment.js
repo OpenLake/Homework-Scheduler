@@ -109,7 +109,7 @@ const NewForm = ({ courseId }) => {
 					sx={{ mt: 3 }}
 				>
 					<Grid container spacing={2}>
-						<Grid item md={6} xs={12}>
+						<Grid item xs={12}>
 							<Controller
 								name="title"
 								control={control}
@@ -135,7 +135,33 @@ const NewForm = ({ courseId }) => {
 								</Typography>
 							)}
 						</Grid>
-						<Grid item md={6} xs={12}>
+						<Grid item xs={12}>
+							<Controller
+								name="maxMarks"
+								control={control}
+								rules={{
+									required: 'Maximum Marks is required',
+								}}
+								defaultValue={''}
+								render={({ field }) => (
+									<TextField
+										{...field}
+										required
+										fullWidth
+										type="number"
+										min={0}
+										label="Max Marks"
+										error={!!errors.maxMarks}
+									/>
+								)}
+							/>
+							{errors.maxMarks && (
+								<Typography variant="caption" color="error">
+									{errors.maxMarks.message}
+								</Typography>
+							)}
+						</Grid>
+						<Grid item xs={12}>
 							<DateTimePicker
 								date={dueDate}
 								onChange={onDateChange}

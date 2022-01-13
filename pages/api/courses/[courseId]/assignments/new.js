@@ -13,7 +13,7 @@ const handler = async (req, res) => {
 	await isAuth(req, res);
 
 	const { courseId } = req.query;
-	const { title, description, dueDate, assignedTo } = req.body;
+	const { title, description, dueDate, assignedTo, maxMarks } = req.body;
 
 	const course = await Course.findById(courseId);
 
@@ -28,6 +28,7 @@ const handler = async (req, res) => {
 	const assignment = new Assignment({
 		title,
 		description,
+		maxMarks,
 		dueDate: new Date(dueDate),
 		course: courseId,
 		assignedTo: assignedTo ? assignedTo : [],

@@ -17,6 +17,9 @@ const Assignment = ({ assignment }) => {
 					{format(new Date(assignment.dueDate), "MMMM dd, yyyy 'at' h:mm a")}
 				</i>
 			</Typography>
+			<Typography variant="body2" color="textSecondary">
+				<i>Max Marks - {assignment.maxMarks}</i>
+			</Typography>
 			<Typography variant="h4" fontWeight={2} mt={1}>
 				Instructions
 			</Typography>
