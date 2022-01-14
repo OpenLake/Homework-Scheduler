@@ -41,34 +41,37 @@ const Submissions = props => {
 	};
 
 	return (
-		<Grid container sx={{ mt: 2 }}>
-			<Grid item xs={12} md={3}>
-				{mobile && (
-					<IconButton onClick={() => setOpen(!open)}>
-						<Icon>{open ? 'close' : 'menu'}</Icon>
-					</IconButton>
-				)}
-				<StudentsSideBar
-					students={students}
-					open={open}
-					mobile={mobile}
-					handleClick={handleClick}
-					submissions={submissions}
-				/>
-			</Grid>
-			<Grid item xs={12} md={9} p={2}>
-				{activeSubmission === 'instructions' && (
-					<AssignmentDetails assignment={assignment} />
-				)}
-				{activeSubmission !== 'instructions' && (
-					<SubmissionDetails
-						submission={activeSubmission}
-						dueDate={assignment.dueDate}
+		<Box>
+			<Grid container sx={{ mt: 2 }}>
+				<Grid item xs={12} md={3}>
+					{mobile && (
+						<IconButton onClick={() => setOpen(!open)}>
+							<Icon>{open ? 'close' : 'menu'}</Icon>
+						</IconButton>
+					)}
+					<StudentsSideBar
+						students={students}
+						open={open}
+						mobile={mobile}
+						handleClick={handleClick}
+						submissions={submissions}
+						activeId={activeSubmission}
 					/>
-				)}
+				</Grid>
+				<Grid item xs={12} md={9} p={2}>
+					{activeSubmission === 'instructions' && (
+						<AssignmentDetails assignment={assignment} />
+					)}
+					{activeSubmission !== 'instructions' && (
+						<SubmissionDetails
+							submission={activeSubmission}
+							assignment={assignment}
+						/>
+					)}
+				</Grid>
 			</Grid>
-			<Box height="40px" />
-		</Grid>
+			<Box height="60px" />
+		</Box>
 	);
 };
 

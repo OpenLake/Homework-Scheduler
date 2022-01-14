@@ -21,3 +21,25 @@ export const reqCreateSubmission = async submission => {
 
 	return data;
 };
+
+export const reqGradeSubmission = async reqData => {
+	const response = await fetch(
+		`/api/courses/${reqData.courseId}/submissions/${reqData.submissionId}/grade`,
+		{
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json',
+			},
+			credentials: 'include',
+			body: JSON.stringify(reqData),
+		},
+	);
+
+	const data = await response.json();
+
+	if (!response.ok) {
+		throw new CustomError(data.message);
+	}
+
+	return data;
+};

@@ -1,7 +1,7 @@
 import {
 	Slide,
 	List,
-	ListItem,
+	ListItemButton,
 	Avatar,
 	ListItemText,
 	ListItemAvatar,
@@ -18,6 +18,7 @@ const StudentsSideBar = ({
 	mobile,
 	handleClick,
 	submissions,
+	activeId,
 }) => {
 	return (
 		<>
@@ -33,22 +34,22 @@ const StudentsSideBar = ({
 						borderRadius: '0.5rem 0.5rem 0rem 0rem',
 					}}
 				>
-					<ListItem
-						button
+					<ListItemButton
 						key="instructions"
 						onClick={() => handleClick('instructions')}
+						selected={activeId === 'instructions'}
 					>
 						<ListItemIcon>
 							<Icon>info</Icon>
 						</ListItemIcon>
 						<ListItemText primary="Instructions" />
-					</ListItem>
+					</ListItemButton>
 					<Divider variant="middle" />
 					{students.map(student => (
-						<ListItem
-							button
+						<ListItemButton
 							key={student._id}
 							onClick={() => handleClick(student._id)}
+							selected={activeId.student?._id === student._id}
 						>
 							<ListItemAvatar>
 								<Avatar>{student.firstName[0]}</Avatar>
@@ -69,7 +70,7 @@ const StudentsSideBar = ({
 									)
 								}
 							/>
-						</ListItem>
+						</ListItemButton>
 					))}
 				</List>
 			</Slide>

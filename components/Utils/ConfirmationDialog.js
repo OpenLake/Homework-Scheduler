@@ -6,31 +6,41 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import Slide from '@mui/material/Slide';
+import { Divider } from '@mui/material';
 
 const Transition = React.forwardRef(function Transition(props, ref) {
 	return <Slide direction="up" ref={ref} {...props} />;
 });
 
-const ConfirmationDialog = props => {
+const ConfirmationDialog = ({
+	open,
+	handleClose,
+	handleConfirm,
+	title,
+	content,
+	generalDialog = false,
+}) => {
 	return (
 		<div>
 			<Dialog
-				open={props.open}
+				open={open}
 				TransitionComponent={Transition}
 				keepMounted
-				onClose={props.handleClose}
+				onClose={handleClose}
 				aria-describedby="alert-dialog-slide-description"
 				fullWidth
 			>
-				<DialogTitle>{props.title}</DialogTitle>
+				<DialogTitle>{title}</DialogTitle>
+				<Divider variant="middle" />
 				<DialogContent>
 					<DialogContentText id="alert-dialog-slide-description">
-						{props.content}
+						{content}
 					</DialogContentText>
 				</DialogContent>
 				<DialogActions>
-					<Button onClick={props.handleClose}>No</Button>
-					<Button onClick={props.handleConfirm}>Confirm</Button>
+					{!generalDialog && <Button onClick={handleClose}>No</Button>}
+					{!generalDialog && <Button onClick={handleConfirm}>Confirm</Button>}
+					{generalDialog && <Button onClick={handleClose}>Close</Button>}
 				</DialogActions>
 			</Dialog>
 		</div>

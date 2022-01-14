@@ -28,6 +28,7 @@ import NewSubmissionForm from '../../../../../components/Forms/NewSubmission';
 import AnnouncementInput from '../../../../../components/Announcements/AnnouncementInput';
 import Announcements from '../../../../../components/Announcements/Announcements';
 import LoadingSpinner from '../../../../../components/Utils/LoadingSpinner';
+import ConfirmationDialog from '../../../../../components/Utils/ConfirmationDialog';
 
 const Index = props => {
 	const router = useRouter();
@@ -36,6 +37,8 @@ const Index = props => {
 	const { user, isAuthenticated: auth } = useContext(authContext);
 	const { isEnrolled, isTeacher, courseId } = useCourse();
 	const { isLoading, sendRequest } = useHttp();
+
+	const [viewFeedback, setViewFeedback] = useState(false);
 
 	const [announcements, setAnnouncements] = useState(
 		JSON.parse(props.announcements),
@@ -73,6 +76,13 @@ const Index = props => {
 
 	return (
 		<Container sx={{ p: 2 }}>
+			<ConfirmationDialog
+				generalDialog
+				open={viewFeedback}
+				handleClose={() => setViewFeedback(false)}
+				title="Feedback"
+				content={submission?.feedback}
+			/>
 			<LoadingSpinner isLoading={isLoading} />
 			<Grid container rowSpacing={3}>
 				<Grid item xs={12}>
@@ -130,6 +140,15 @@ const Index = props => {
 										__html: submission.content || submission,
 									}}
 								/>
+								{submission.feedback && (
+									<Button
+										variant="contained"
+										color="success"
+										onClick={() => setViewFeedback(true)}
+									>
+										{"View Teacher's Feedback"}
+									</Button>
+								)}
 							</Box>
 						)}
 						{!isEnrolled && (
