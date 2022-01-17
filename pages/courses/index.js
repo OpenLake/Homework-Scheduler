@@ -33,7 +33,6 @@ const Index = props => {
 				courses={courses}
 				onClick={onCourseClick}
 			/>
-			<Box height="20px" />
 		</Fragment>
 	);
 };

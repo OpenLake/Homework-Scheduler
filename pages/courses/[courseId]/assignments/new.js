@@ -10,7 +10,7 @@ import NewAssignmentForm from '../../../../components/Forms/NewAssignment';
 
 const New = props => {
 	return (
-		<Box mt={2}>
+		<Box my={2}>
 			<Stack direction="row">
 				<BackButton />
 				<Typography variant="h4" mx="auto">

@@ -41,24 +41,43 @@ const Submissions = props => {
 	};
 
 	return (
-		<Box>
-			<Grid container sx={{ mt: 2 }}>
-				<Grid item xs={12} md={3}>
-					{mobile && (
-						<IconButton onClick={() => setOpen(!open)}>
-							<Icon>{open ? 'close' : 'menu'}</Icon>
-						</IconButton>
-					)}
-					<StudentsSideBar
-						students={students}
-						open={open}
-						mobile={mobile}
-						handleClick={handleClick}
-						submissions={submissions}
-						activeId={activeSubmission}
-					/>
-				</Grid>
-				<Grid item xs={12} md={9} p={2}>
+		<Grid
+			container
+			sx={{
+				mt: 2,
+				overflowY: 'hidden',
+				flex: 1,
+				// alignItems: 'stretch',
+			}}
+		>
+			<Grid
+				item
+				xs={12}
+				md={3}
+				sx={{ overflow: 'auto', bgcolor: 'white', maxHeight: '100%' }}
+			>
+				{mobile && (
+					<IconButton onClick={() => setOpen(!open)}>
+						<Icon>{open ? 'close' : 'menu'}</Icon>
+					</IconButton>
+				)}
+				<StudentsSideBar
+					students={students}
+					open={open}
+					mobile={mobile}
+					handleClick={handleClick}
+					submissions={submissions}
+					activeId={activeSubmission}
+				/>
+			</Grid>
+			{(!mobile || !open) && (
+				<Grid
+					item
+					xs={12}
+					md={9}
+					p={2}
+					sx={{ overflow: 'auto', maxHeight: '100%' }}
+				>
 					{activeSubmission === 'instructions' && (
 						<AssignmentDetails assignment={assignment} />
 					)}
@@ -69,12 +88,15 @@ const Submissions = props => {
 						/>
 					)}
 				</Grid>
-			</Grid>
-			<Box height="60px" />
-		</Box>
+			)}
+		</Grid>
 	);
 };
 
+CourseLayout.sx = {
+	flex: 1,
+	overflowY: 'hidden',
+};
 Submissions.Layout = CourseLayout;
 
 export const getServerSideProps = isAuth(async (ctx, user) => {

@@ -107,7 +107,7 @@ export const useCourse = () => {
 	return ctx;
 };
 
-const CourseLayout = ({ children }) => {
+const CourseLayout = ({ children, sx }) => {
 	const mq = useMediaQuery('(max-width:800px)');
 	const router = useRouter();
 	const { courseId } = router.query;
@@ -171,7 +171,7 @@ const CourseLayout = ({ children }) => {
 				course,
 			}}
 		>
-			<Box sx={{ width: '100%' }}>
+			<Stack sx={sx}>
 				<Stack
 					direction="row"
 					justifyContent="space-between"
@@ -215,8 +215,7 @@ const CourseLayout = ({ children }) => {
 				)}
 				<LoadingSpinner isLoading={isLoading} />
 				{children}
-				<Box height="20px" />
-			</Box>
+			</Stack>
 		</CourseContext.Provider>
 	);
 };

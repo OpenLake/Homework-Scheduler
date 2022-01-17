@@ -11,8 +11,8 @@ import {
 
 const RenderDay = ({ day, DayComponentProps, highlightDays }) => {
 	const disabled = DayComponentProps.disabled;
-	const freq = highlightDays[day.getDate()] || 0;
-	const color = freq < 1 ? grey[200] : red[400];
+	const freq = highlightDays[parseInt(day.getDate()) - 1];
+	const color = freq < 1 ? grey[200] : red[Math.min(freq * 100, 900)];
 
 	if (!disabled) {
 		return (
@@ -38,7 +38,7 @@ const Picker = ({
 	onError,
 	label,
 	onMonthChange,
-	highlightDays = {},
+	highlightDays = [],
 	isLoading = false,
 	error,
 }) => {
@@ -56,8 +56,6 @@ const Picker = ({
 		<LocalizationProvider dateAdapter={DateAdapter}>
 			<DateTimePicker
 				value={date}
-				loading={isLoading}
-				renderLoading={() => <CalendarPickerSkeleton />}
 				onChange={handleDateChange}
 				renderInput={props => <TextField {...props} fullWidth error={error} />}
 				label={label || 'Date and time picker'}

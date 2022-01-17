@@ -71,7 +71,6 @@ const Index = props => {
 				}
 			/>
 			<Announcements announcements={announcements} onDelete={onDelete} />
-			<Box height="40px" />
 		</Container>
 	);
 };
@@ -82,12 +81,15 @@ export const getServerSideProps = async ctx => {
 	if (!validateSlugs(ctx)) {
 		return {
 			notFound: true,
-		}
+		};
 	}
-	
+
 	await dbConnect();
 	const { courseId } = ctx.query;
-	const announcements = await Announcement.find({ course: courseId, type: 'general' })
+	const announcements = await Announcement.find({
+		course: courseId,
+		type: 'general',
+	})
 		.sort({ createdAt: -1 })
 		.populate('user', {
 			_id: 1,

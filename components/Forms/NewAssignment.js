@@ -70,6 +70,7 @@ const NewForm = ({ courseId }) => {
 
 	const onMonthChange = date => {
 		setLoadingCount(true);
+		setAssignmentsCount([]);
 		sendRequest(
 			fetchAssignmentCountByDate,
 			{ courseId, date: format(date, 'MM-yyyy') },
@@ -197,7 +198,6 @@ const NewForm = ({ courseId }) => {
 					</Button>
 				</Box>
 			</Box>
-			<Box mb="50px" />
 		</Container>
 	);
 };

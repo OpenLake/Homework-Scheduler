@@ -198,7 +198,6 @@ const Index = props => {
 					/>
 				</Grid>
 			</Grid>
-			<Box height="50px" />
 		</Container>
 	);
 };

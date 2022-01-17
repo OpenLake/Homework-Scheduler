@@ -1,14 +1,7 @@
 import useAssignments from '../../hooks/useAssignments';
 
 import Link from 'next/link';
-import {
-	List,
-	ListItemButton,
-	Typography,
-	Box,
-	Button,
-	Icon,
-} from '@mui/material';
+import { Typography, Box, Button, Icon } from '@mui/material';
 
 import AssignmentTable from './AssignmentTable';
 import LoadingSpinner from '../Utils/LoadingSpinner';
@@ -55,7 +48,6 @@ const Assignments = ({ isTeacher, courseId, isEnrolled }) => {
 					/>
 				</Box>
 			)}
-			<Box mb="60px" />
 		</Box>
 	);
 };

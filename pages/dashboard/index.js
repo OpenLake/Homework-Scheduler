@@ -17,7 +17,7 @@ const Dashboard = props => {
 	};
 
 	return (
-		<Container sx={{ my: 4 }}>
+		<Container>
 			{myCourses.length > 0 && (
 				<CourseList
 					title="Your Courses"
@@ -33,7 +33,6 @@ const Dashboard = props => {
 				/>
 			)}
 			{myCourses.length === 0 && enrolledCourses.length === 0 && <NoCourses />}
-			<Box height="10px" />
 		</Container>
 	);
 };
