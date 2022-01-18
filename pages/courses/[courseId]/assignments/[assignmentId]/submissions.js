@@ -93,11 +93,13 @@ const Submissions = props => {
 	);
 };
 
-CourseLayout.sx = {
-	flex: 1,
-	overflowY: 'hidden',
-};
 Submissions.Layout = CourseLayout;
+Submissions.LayoutProps = {
+	sx: {
+		flex: 1,
+		overflowY: 'hidden',
+	},
+};
 
 export const getServerSideProps = isAuth(async (ctx, user) => {
 	if (!validateSlugs(ctx)) {
