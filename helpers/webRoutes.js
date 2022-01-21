@@ -28,6 +28,13 @@ const webRoutes = {
 		title: 'Dashboard',
 		redirect: '/',
 	},
+	todo: {
+		beforeAuth: false,
+		afterAuth: true,
+		path: '/dashboard/todo',
+		title: 'Todo',
+		redirect: '/',
+	},
 	profile: {
 		beforeAuth: false,
 		afterAuth: true,
