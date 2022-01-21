@@ -53,6 +53,13 @@ const Todo = props => {
 			<Divider />
 			<List>
 				<CollapsibleList
+					title="Missing"
+					titleColor="error"
+					list={todos.missing}
+					listItem={todo => <TodoItem todo={todo} key={todo._id} />}
+					showCount
+				/>
+				<CollapsibleList
 					title="This Week"
 					list={todos.thisWeek}
 					listItem={todo => <TodoItem todo={todo} key={todo._id} />}
@@ -79,7 +86,6 @@ export const getServerSideProps = isAuth(async (ctx, user) => {
 	const [assignments, submissions] = await Promise.all([
 		Assignment.find({
 			course: { $in: user.courses },
-			dueDate: { $gte: new Date() },
 		}).populate('course'),
 		Submission.find({
 			submittedBy: user._id,
@@ -100,16 +106,19 @@ export const getServerSideProps = isAuth(async (ctx, user) => {
 			const dueDate = new Date(todo.dueDate);
 			const today = new Date();
 			const diff = Math.ceil((dueDate - today) / (1000 * 60 * 60 * 24));
-			if (diff <= 7) {
-				acc.thisWeek = [...acc.thisWeek, todo];
+			if (dueDate < today) {
+				acc.missing.push(todo);
+			} else if (diff <= 7) {
+				acc.thisWeek.push(todo);
 			} else if (diff <= 14) {
-				acc.nextWeek = [...acc.nextWeek, todo];
+				acc.nextWeek.push(todo);
 			} else {
-				acc.later = [...acc.later, todo];
+				acc.later.push(todo);
 			}
 			return acc;
 		},
 		{
+			missing: [],
 			thisWeek: [],
 			nextWeek: [],
 			later: [],

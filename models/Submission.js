@@ -34,6 +34,9 @@ const submissionSchema = mongoose.Schema({
 	feedback: {
 		type: String,
 	},
+	timeTaken: {
+		type: Number,
+	},
 });
 
 module.exports =

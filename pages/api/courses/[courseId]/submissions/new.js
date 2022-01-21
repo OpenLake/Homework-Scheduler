@@ -12,7 +12,7 @@ const handler = async (req, res) => {
 	await dbConnect();
 	await isAuth(req, res);
 
-	const { content, assignmentId } = req.body;
+	const { content, assignmentId, timeTaken } = req.body;
 
 	const assignment = await Assignment.findById(assignmentId);
 
@@ -29,6 +29,7 @@ const handler = async (req, res) => {
 	const submission = new Submission({
 		content,
 		assignment,
+		timeTaken,
 		course: assignment.course,
 		submittedBy: req.user._id,
 	});

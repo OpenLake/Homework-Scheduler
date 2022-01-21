@@ -11,7 +11,7 @@ import {
 	Stack,
 } from '@mui/material';
 
-const CollapsibleList = ({ title, list, listItem, showCount }) => {
+const CollapsibleList = ({ title, titleColor, list, listItem, showCount }) => {
 	const [open, setOpen] = useState(false);
 
 	const handleOpen = () => {
@@ -23,7 +23,13 @@ const CollapsibleList = ({ title, list, listItem, showCount }) => {
 	return (
 		<>
 			<ListItemButton onClick={handleOpen}>
-				<ListItemText primary={<Typography variant="h5">{title}</Typography>} />
+				<ListItemText
+					primary={
+						<Typography variant="h5" color={titleColor}>
+							{title}
+						</Typography>
+					}
+				/>
 				<Stack direction="row" spacing={1}>
 					{showCount && <Chip label={list.length} color="info" size="small" />}
 					<Icon>{open ? 'expand_less' : 'expand_more'}</Icon>

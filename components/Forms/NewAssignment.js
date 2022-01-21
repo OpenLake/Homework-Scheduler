@@ -162,7 +162,7 @@ const NewForm = ({ courseId }) => {
 								</Typography>
 							)}
 						</Grid>
-						<Grid item xs={12}>
+						<Grid item xs={12} md={6}>
 							<DateTimePicker
 								date={dueDate}
 								onChange={onDateChange}
@@ -177,6 +177,22 @@ const NewForm = ({ courseId }) => {
 									Please select a valid date
 								</Typography>
 							)}
+						</Grid>
+						<Grid item xs={12} md={6}>
+							<Controller
+								name="expectedTime"
+								control={control}
+								defaultValue={''}
+								render={({ field }) => (
+									<TextField
+										{...field}
+										fullWidth
+										type="number"
+										min={0}
+										label="Expected Time (in hours)"
+									/>
+								)}
+							/>
 						</Grid>
 						<Grid item xs={12}>
 							<TextEditor

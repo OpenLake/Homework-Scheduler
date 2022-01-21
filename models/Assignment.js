@@ -33,6 +33,9 @@ const assignmentSchema = mongoose.Schema({
 		type: Number,
 		required: true,
 	},
+	expectedTime: {
+		type: Number,
+	}
 });
 
 module.exports =
