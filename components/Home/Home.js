@@ -33,73 +33,70 @@ const Home = () => {
 	};
 
 	return (
-		<main>
-			<Box
-				sx={{
-					bgcolor: 'background.paper',
-					pt: 5,
-					pb: 6,
-				}}
-			>
-				<CreateCourse open={openCreateModal} handleClose={handleClose} />
-				<Container maxWidth="sm">
-					<Typography
-						component="h1"
-						variant="h3"
-						align="center"
-						color="text.primary"
-						gutterBottom
-					>
-						Welcome!
-					</Typography>
+		<Box
+			sx={{
+				bgcolor: 'background.paper',
+				mt: 'auto',
+			}}
+		>
+			<CreateCourse open={openCreateModal} handleClose={handleClose} />
+			<Container maxWidth="sm">
+				<Typography
+					component="h1"
+					variant="h3"
+					align="center"
+					color="text.primary"
+					gutterBottom
+				>
+					Welcome!
+				</Typography>
+				<Typography
+					variant="h6"
+					align="center"
+					color="text.secondary"
+					paragraph
+				>
+					Helps teachers decide homework deadlines by keeping a track of other
+					commitments and assignments of the students.
+				</Typography>
+				<Typography
+					variant="h4"
+					align="center"
+					color="text.secondary"
+					paragraph
+				>
+					Also includes a calendar to keep track of the events and deadlines of
+					the students.
+				</Typography>
+				<Stack
+					sx={{ pt: 2 }}
+					direction={{ xs: 'column', sm: 'row' }}
+					spacing={2}
+					justifyContent="center"
+				>
+					<Button variant="contained" onClick={onCreateCourse}>
+						<Icon>add</Icon>
+						Create a course
+					</Button>
 					<Typography
 						variant="h6"
 						align="center"
 						color="text.secondary"
 						paragraph
 					>
-						Helps teachers decide homework deadlines by keeping a track of other
-						commitments and assignments of the students.
+						OR
 					</Typography>
-					<Typography
-						variant="h4"
-						align="center"
-						color="text.secondary"
-						paragraph
+					<Button
+						variant="contained"
+						color="secondary"
+						onClick={onBrowseCourse}
 					>
-						Also includes a calendar to keep track of the events and deadlines
-						of the students.
-					</Typography>
-					<Stack
-						sx={{ pt: 2 }}
-						direction="row"
-						spacing={2}
-						justifyContent="center"
-					>
-						<Button variant="contained" onClick={onCreateCourse}>
-							<Icon>add</Icon>
-							Create a course
-						</Button>
-						<Typography
-							variant="h6"
-							align="center"
-							color="text.secondary"
-							paragraph
-						>
-							OR
-						</Typography>
-						<Button
-							variant="contained"
-							color="secondary"
-							onClick={onBrowseCourse}
-						>
-							<Icon>search</Icon>
-							Browse Courses
-						</Button>
-					</Stack>
-				</Container>
-			</Box>
-		</main>
+						<Icon>search</Icon>
+						Browse Courses
+					</Button>
+				</Stack>
+			</Container>
+		</Box>
 	);
 };
 

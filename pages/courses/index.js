@@ -2,11 +2,11 @@ import { dbConnect } from '../../lib/db';
 import { Fragment } from 'react';
 import { useRouter } from 'next/router';
 import webRoutes from '../../helpers/webRoutes';
-import Course from '../../models/Course';
+import { Course } from '../../models';
 
 import CourseList from '../../components/Course/CourseList';
 import NoCourses from '../../components/Course/NoCourse';
-import { Box } from '@mui/system';
+import { Box } from '@mui/material';
 
 const Index = props => {
 	const router = useRouter();
@@ -33,7 +33,6 @@ const Index = props => {
 				courses={courses}
 				onClick={onCourseClick}
 			/>
-			<Box height="20px" />
 		</Fragment>
 	);
 };

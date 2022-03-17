@@ -28,6 +28,13 @@ const webRoutes = {
 		title: 'Dashboard',
 		redirect: '/',
 	},
+	todo: {
+		beforeAuth: false,
+		afterAuth: true,
+		path: '/dashboard/todo',
+		title: 'Todo',
+		redirect: '/',
+	},
 	profile: {
 		beforeAuth: false,
 		afterAuth: true,
@@ -47,12 +54,16 @@ const webRoutes = {
 		path: `/courses/${id}`,
 		redirect: '/login',
 	}),
-	newAssignment: id => ({
+	newAssignment: {
 		beforeAuth: false,
 		afterAuth: true,
-		path: `/courses/${id}/assignments/new`,
 		redirect: '/login',
-	}),
+	},
+	submissions: {
+		beforeAuth: false,
+		afterAuth: true,
+		redirect: '/login',
+	},
 };
 
 export default webRoutes;

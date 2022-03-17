@@ -1,5 +1,5 @@
 import CustomError from '../../helpers/api/CustomError';
-import User from '../../models/User';
+import { User } from '../../models';
 import Cookies from 'cookies';
 
 const isAuth = async (req, res) => {

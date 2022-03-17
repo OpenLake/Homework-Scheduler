@@ -1,20 +1,16 @@
+import { validateSlugs } from '../../../../helpers/validateSlugs';
 import isAuth from '../../../../middlewares/isAuth';
 import webRoutes from '../.../../../../../helpers/webRoutes';
 
-import Course from '../../../../models/Course';
+import { Course } from '../../../../models';
 
 import { Box, Divider, Stack, Typography } from '@mui/material';
-import Error from 'next/error';
 import BackButton from '../../../../components/Utils/BackButton';
 import NewAssignmentForm from '../../../../components/Forms/NewAssignment';
 
 const New = props => {
-	if (props.error) {
-		return <Error statusCode={props.statusCode} title={props.error} />;
-	}
-
 	return (
-		<Box mt={2}>
+		<Box my={2}>
 			<Stack direction="row">
 				<BackButton />
 				<Typography variant="h4" mx="auto">
@@ -28,15 +24,27 @@ const New = props => {
 };
 
 export const getServerSideProps = isAuth(async (ctx, user) => {
+	if (!validateSlugs(ctx)) {
+		return {
+			notFound: true,
+		};
+	}
+
 	const courseId = ctx.query.courseId;
 	const course = await Course.findById(courseId);
 
 	if (!course) {
-		return { props: { statusCode: 404, error: 'Course not found' } };
+		return {
+			notFound: true,
+		};
 	}
 
 	if (!course.creator.equals(user._id)) {
-		return { props: { statusCode: 403, error: 'Unauthorized' } };
+		return {
+			redirect: {
+				destination: `/courses/${courseId}/assignments`,
+			},
+		};
 	}
 
 	return {
@@ -44,6 +52,6 @@ export const getServerSideProps = isAuth(async (ctx, user) => {
 			courseId,
 		},
 	};
-}, webRoutes.newAssignment(''));
+}, webRoutes.newAssignment);
 
 export default New;

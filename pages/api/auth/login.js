@@ -1,5 +1,5 @@
 import Cookies from 'cookies';
-import User from '../../../models/User';
+import { User } from '../../../models';
 import CustomError from '../../../helpers/api/CustomError';
 import catchErrors from '../../../helpers/api/catchErrors';
 import { dbConnect } from '../../../lib/db';

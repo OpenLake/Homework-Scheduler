@@ -1,7 +1,7 @@
 import { dbConnect } from '../../../lib/db';
 import catchErrors from '../../../helpers/api/catchErrors';
 import CustomError from '../../../helpers/api/CustomError';
-import Course from '../../../models/Course';
+import { Course } from '../../../models';
 import isAuth from '../../../middlewares/api/isAuth';
 
 const handler = async (req, res) => {
@@ -10,7 +10,6 @@ const handler = async (req, res) => {
 
 	const { courseId } = req.body;
 
-	console.log(courseId);
 	const course = await Course.findById(courseId);
 
 	if (!course) {

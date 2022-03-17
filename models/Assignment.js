@@ -29,6 +29,13 @@ const assignmentSchema = mongoose.Schema({
 			ref: 'User',
 		},
 	],
+	maxMarks: {
+		type: Number,
+		required: true,
+	},
+	expectedTime: {
+		type: Number,
+	}
 });
 
 module.exports =

@@ -1,6 +1,6 @@
 import Cookies from 'cookies';
 import { dbConnect } from '../../../lib/db';
-import User from '../../../models/User';
+import { User } from '../../../models';
 import catchErrors from '../../../helpers/api/catchErrors';
 
 const handler = async (req, res) => {

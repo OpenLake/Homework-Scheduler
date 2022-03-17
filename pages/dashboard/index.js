@@ -1,9 +1,16 @@
 import { useRouter } from 'next/router';
-import Course from '../../models/Course';
+import Link from 'next/link';
+import { Course } from '../../models';
 import webRoutes from '../../helpers/webRoutes';
 import isAuth from '../../middlewares/isAuth';
 
-import { Box, Container } from '@mui/material';
+import {
+	Container,
+	Link as MUILink,
+	Icon,
+	Typography,
+	Stack,
+} from '@mui/material';
 import CourseList from '../../components/Course/CourseList';
 import NoCourses from '../../components/Course/NoCourse';
 
@@ -17,7 +24,22 @@ const Dashboard = props => {
 	};
 
 	return (
-		<Container sx={{ my: 4 }}>
+		<Container>
+			<Stack
+				direction="row"
+				spacing={1}
+				justifyContent="flex-end"
+				alignItems="center"
+				mt={2}
+				mb={-5}
+			>
+				<Icon color="primary">list</Icon>
+				<Link href="/dashboard/todo" passHref>
+					<MUILink underline="hover">
+						<Typography variant="h6">{"Your To-do's"}</Typography>
+					</MUILink>
+				</Link>
+			</Stack>
 			{myCourses.length > 0 && (
 				<CourseList
 					title="Your Courses"
@@ -33,7 +55,6 @@ const Dashboard = props => {
 				/>
 			)}
 			{myCourses.length === 0 && enrolledCourses.length === 0 && <NoCourses />}
-			<Box height="10px" />
 		</Container>
 	);
 };
