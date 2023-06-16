@@ -10,8 +10,14 @@ while giving some additional insights on assignments.
 
 - Server Side Rendered App with Next.js providing better SEO
 - MongoDB as the database
-- Once a simple product is ready, we'll work on more features like handling file submissions by students
+- A nice date picker ui for selecting deadlines for assignments
 - Tech Stack : React/Next.js, MongoDB
+
+For more details on features, I have written a blog post [here](https://fossoverflow.dev/blog/2021/homework-scheduler) :smile:
+
+## 🚀 Hosted Link
+
+- This project is hosted on Vercel and can be accessed [here](https://homework-scheduler.vercel.app/)
 
 ## Setup Instructions
 - Install ```Node```, ```MongoDB```
@@ -23,4 +29,5 @@ while giving some additional insights on assignments.
 ## Maintainers
 
 - 👤 **Ambar Mutha** [@supercoww](https://github.com/supercoww)
+- 👤 **Lalit** [@lalit3716](https://github.com/lalit3716)
 ---
