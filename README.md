@@ -1,5 +1,20 @@
 <h1 align="center">Welcome to Homework Scheduler 👋</h1>
 
+<p align="center">
+  <a href="https://github.com/OpenLake/Homework-Scheduler/issues/10">
+    <img alt="Contributions welcome" src="https://img.shields.io/badge/contributions-welcome-brightgreen.svg">
+  </a>
+  <a href="./LICENSE">
+    <img alt="License: MIT" src="https://img.shields.io/badge/License-MIT-yellow.svg">
+  </a>
+  <a href="https://homework-scheduler.vercel.app/">
+    <img alt="Live Demo" src="https://img.shields.io/badge/demo-live-blue.svg">
+  </a>
+  <a href="https://github.com/OpenLake/Homework-Scheduler">
+    <img alt="GitHub stars" src="https://img.shields.io/github/stars/OpenLake/Homework-Scheduler?style=social">
+  </a>
+</p>
+
 ## 🤔 Problem
 
 Sometimes Teachers assign multiple assignments on very close deadlines with each other which results in a very hectic scehdule for students.
@@ -28,4 +43,8 @@ For more details on features, I have written a blog post [here](https://fossover
 
 ## Maintainers
 - No one assigned as of now
+
+## Contributing
+
+Contributions are welcome. Please read [CONTRIBUTING.md](./CONTRIBUTING.md) before opening an issue or pull request.
 ---
